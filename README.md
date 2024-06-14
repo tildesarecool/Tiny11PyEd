@@ -2,7 +2,7 @@
 
 Scripts to build a trimmed-down Windows 11 image - now in...Python?
 
-Below I have something of development log (in case you have a need to read boring stuff).
+Below I have something of development log (in case you have a need to read boring stuff). 
 <p>
 
 As implied by above, this is a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source. But I don't think I'll be doing any pull requests. 
