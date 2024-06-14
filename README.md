@@ -5,7 +5,7 @@ Scripts to build a trimmed-down Windows 11 image - now in...Python?
 Below I have something of development log (in case you have a need to read boring stuff). 
 <p>
 
-As implied by above, this is a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source. But I don't think I'll be doing any pull requests. 
+Thi started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source. But I don't think I'll be doing any pull requests. Today I decided to save the fork repo for a PS edition fork and save this python edition to a separate repo. That went about as well as I expected. But it work apparently.
 
 </p>
 
@@ -234,6 +234,10 @@ What I'd kind of like to do is query a list of available appx packages and prese
 ### 12 June 2024
 
 Only the two functions for taking in and processing the WIM output got most done today. Well one takes in the WIM info as a big string and converts that string to a lists of lists. The second function loops through the that list and prints out a menu to select to the OS. I still haven't gone through and  done all the if/else statements to use those menu items to actually select which OS. That will likely come next. 
+
+### 13 June 2024
+
+I switched python edition to a new repo so I can save the fork repo for later. And made progress on the actual script, too.
 
 
 </p>
