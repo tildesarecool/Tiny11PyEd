@@ -85,6 +85,7 @@ def converIndexList(index_input) -> list:
     return list_collect
 
 def processWimInfo():
+    dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
 
     processInput = converIndexList(sample_input)
 
@@ -93,10 +94,32 @@ def processWimInfo():
         print(f"{osIndexes[0]}\t for OS {osIndexes[1]}")
 
     print("0 to quit")
-    response = input("Enter OS choice: ")
-    if response == 0:
-        print("No OS entered")
-        pass
+    response = input("Enter OS choice: ").strip()
+    if response != "":
+#        if int(response) == 0:
+#            print("No OS entered")
+#            pass
+
+        for userIn in range(len(processInput)):
+            print(f"userin is value {userIn}")
+            if int(response) == 0:
+                print("Please enter a number for an OS")
+            elif int(response) == userIn and userIn != 0:
+                response = userIn
+    
+    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
+    print(dismWimIndexCMD)
+                
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
 
     return response
 

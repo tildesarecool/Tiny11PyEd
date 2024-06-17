@@ -239,5 +239,12 @@ Only the two functions for taking in and processing the WIM output got most done
 
 I switched python edition to a new repo so I can save the fork repo for later. And made progress on the actual script, too.
 
+### 16 June 2024
+
+I have done some further diving into the PS version of the script and actually broke up the code a bit by adding some new lines and comments designating diffrent areas of the script. I found some redundant code that seems like it was just made for a function.
+
+I also came up what I believe to be a clever way to get the user's preference on an index number for the WIM file. You know, instead of just showing the user the output of the /wiminfo DISM command, saving it to a variable and using that variable in the finished DISM mount command. That sounds easier when I say it like that. Input validation and a for loop is way better probably. Obviously the script still needs a lot of work. 
+
+
 
 </p>

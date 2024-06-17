@@ -46,6 +46,8 @@ New-Item -ItemType Directory -Force -Path "$ScratchDisk\tiny11\sources" >null
 $DriveLetter = Read-Host "Please enter the drive letter for the Windows 11 image"
 $DriveLetter = $DriveLetter + ":"
 
+################ get index from user and convert ESD to wim file with DISM
+
 if ((Test-Path "$DriveLetter\sources\boot.wim") -eq $false -or (Test-Path "$DriveLetter\sources\install.wim") -eq $false) {
     if ((Test-Path "$DriveLetter\sources\install.esd") -eq $true) {
         Write-Host "Found install.esd, converting to install.wim..."
@@ -61,6 +63,8 @@ if ((Test-Path "$DriveLetter\sources\boot.wim") -eq $false -or (Test-Path "$Driv
     }
 }
 
+############# copy contents of install media to tiny 11 folder
+
 Write-Host "Copying Windows image..."
 Copy-Item -Path "$DriveLetter\*" -Destination "$ScratchDisk\tiny11" -Recurse -Force > null
 Set-ItemProperty -Path "$ScratchDisk\tiny11\sources\install.esd" -Name IsReadOnly -Value $false > $null 2>&1
@@ -68,6 +72,9 @@ Remove-Item "$ScratchDisk\tiny11\sources\install.esd" > $null 2>&1
 Write-Host "Copy complete!"
 Start-Sleep -Seconds 2
 Clear-Host
+
+############# again, get index preference of install.wim file from user and mount the install wim file to scratch directory
+
 Write-Host "Getting image information:"
 &  'dism' '/English' "/Get-WimInfo" "/wimfile:$ScratchDisk\tiny11\sources\install.wim"
 $index = Read-Host "Please enter the image index"
@@ -83,6 +90,10 @@ try {
 New-Item -ItemType Directory -Force -Path "$ScratchDisk\scratchdir" > $null
 & dism /English "/mount-image" "/imagefile:$($env:SystemDrive)\tiny11\sources\install.wim" "/index:$index" "/mountdir:$($env:SystemDrive)\scratchdir"
 
+
+############# set international language inform
+
+
 $imageIntl = & dism /English /Get-Intl "/Image:$($env:SystemDrive)\scratchdir"
 $languageLine = $imageIntl -split '\n' | Where-Object { $_ -match 'Default system UI language : ([a-zA-Z]{2}-[a-zA-Z]{2})' }
 
@@ -95,6 +106,8 @@ if ($languageLine) {
 
 $imageInfo = & 'dism' '/English' '/Get-WimInfo' "/wimFile:$($env:SystemDrive)\tiny11\sources\install.wim" "/index:$index"
 $lines = $imageInfo -split '\r?\n'
+
+############# x64 with amd64 for reasons i'm still looking at
 
 foreach ($line in $lines) {
     if ($line -like '*Architecture : *') {
@@ -114,6 +127,11 @@ if (-not $architecture) {
 
 Write-Host "Mounting complete! Performing removal of applications..."
 
+#############( end wim mounting )
+
+
+
+############# start appx package removal process
 $packages = & 'dism' '/English' "/image:$($env:SystemDrive)\scratchdir" '/Get-ProvisionedAppxPackages' |
     ForEach-Object {
         if ($_ -match 'PackageName : (.*)') {
@@ -130,6 +148,7 @@ foreach ($package in $packagesToRemove) {
     & 'dism' '/English' "/image:$($env:SystemDrive)\scratchdir" '/Remove-ProvisionedAppxPackage' "/PackageName:$package"
 }
 
+############# remove edge process
 
 Write-Host "Removing Edge:"
 Remove-Item -Path "$ScratchDisk\scratchdir\Program Files (x86)\Microsoft\Edge" -Recurse -Force >null
@@ -158,6 +177,9 @@ if ($architecture -eq 'amd64') {
 } else {
     Write-Host "Unknown architecture: $architecture"
 }
+
+############# file ownership adjustment, apparently
+
 & 'takeown' '/f' "$ScratchDisk\scratchdir\Windows\System32\Microsoft-Edge-Webview" '/r' >null
 & 'icacls' "$ScratchDisk\scratchdir\Windows\System32\Microsoft-Edge-Webview" '/grant' "$($adminGroup.Value):(F)" '/T' '/C' >null
 Remove-Item -Path "$ScratchDisk\scratchdir\Windows\System32\Microsoft-Edge-Webview" -Recurse -Force >null
@@ -168,6 +190,10 @@ Remove-Item -Path "$ScratchDisk\scratchdir\Windows\System32\OneDriveSetup.exe" -
 Write-Host "Removal complete!"
 Start-Sleep -Seconds 2
 Clear-Host
+
+########################## load registry (ntuser.dat etc) and make some adjustments. 
+
+
 Write-Host "Loading registry..."
 reg load HKLM\zCOMPONENTS $ScratchDisk\scratchdir\Windows\System32\config\COMPONENTS >null
 reg load HKLM\zDEFAULT $ScratchDisk\scratchdir\Windows\System32\config\default >null
@@ -258,6 +284,9 @@ function Enable-Privilege {
   ## The process on which to adjust the privilege. Defaults to the current process.
   $ProcessId = $pid,
   ## Switch to disable the privilege, rather than enable it.
+  
+  ############# this is also ownership/privelege info. I'll just take its word for it
+
   [Switch] $Disable
  )
  $definition = @'
@@ -332,6 +361,8 @@ Write-Host "Permissions modified for Administrators group."
 Write-Host "Registry key permissions successfully updated."
 $regKey.Close()
 
+############# deletion of application compatibility appraiser. apparently. 
+
 Write-Host 'Deleting Application Compatibility Appraiser'
 reg delete "HKEY_LOCAL_MACHINE\zSOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{0600DD45-FAF2-4131-A006-0B17509B9F78}" /f >null
 Write-Host 'Deleting Customer Experience Improvement Program'
@@ -355,6 +386,10 @@ reg unload HKLM\zNTUSER >null
 reg unload HKLM\zSCHEMA >null
 reg unload HKLM\zSOFTWARE
 reg unload HKLM\zSYSTEM >null
+
+
+############# cleaning up image
+
 Write-Host "Cleaning up image..."
 & 'dism' '/English' "/image:$ScratchDisk\scratchdir" '/Cleanup-Image' '/StartComponentCleanup' '/ResetBase' >null
 Write-Host "Cleanup complete."
@@ -368,6 +403,9 @@ Rename-Item -Path "$ScratchDisk\tiny11\sources\install2.wim" -NewName "install.w
 Write-Host "Windows image completed. Continuing with boot.wim."
 Start-Sleep -Seconds 2
 Clear-Host
+
+############# now mounting boot wim image
+
 Write-Host "Mounting boot image:"
 $wimFilePath = "$($env:SystemDrive)\tiny11\sources\boot.wim" 
 & takeown "/F" $wimFilePath >null
@@ -402,9 +440,18 @@ reg unload HKLM\zSCHEMA >null
 $regKey.Close()
 reg unload HKLM\zSOFTWARE
 reg unload HKLM\zSYSTEM >null
+
+############# now unmounting boot wim image
+
 Write-Host "Unmounting image..."
 & 'dism' '/English' '/unmount-image' "/mountdir:$ScratchDisk\scratchdir" '/commit'
 Clear-Host
+
+
+
+#################################################### ISO creation process
+
+
 Write-Host "The tiny11 image is now completed. Proceeding with the making of the ISO..."
 Write-Host "Copying unattended file for bypassing MS account on OOBE..."
 Copy-Item -Path "$PSScriptRoot\autounattend.xml" -Destination "$ScratchDisk\tiny11\autounattend.xml" -Force >null
