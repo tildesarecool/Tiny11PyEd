@@ -245,6 +245,17 @@ I have done some further diving into the PS version of the script and actually b
 
 I also came up what I believe to be a clever way to get the user's preference on an index number for the WIM file. You know, instead of just showing the user the output of the /wiminfo DISM command, saving it to a variable and using that variable in the finished DISM mount command. That sounds easier when I say it like that. Input validation and a for loop is way better probably. Obviously the script still needs a lot of work. 
 
+### 17 June 2024
+
+I came up with a special function just for handling attempts to create a subfolder for the user: attempt to create folder and if it's successful return true other wise print a message displaying the error from the OS then return false.
+
+This worked out since I've already needed to call it twice.
+
+There's another instance where I copy/pasted some code which should obviously also be a seperate function. And I would do that but at some point it feels like I probably want to do some actual WIM processing.
+
+Writing that sparked a random thougt: would it be possible to set some the tasks in the script as a background process with python? For instance in doing the file copy of the install source to the working directory could I put that in the back ground then continue the script to get to the ESD/WIM conversion and put that into the background and continue. Then I might have to also have progress bars always on the screen too. But that probably isn't a big deal. Also have to handle error message gracefully as well. That could be harder. Maybe if I partioned the screen up. That's a thing, right?
+
+
 
 
 </p>
