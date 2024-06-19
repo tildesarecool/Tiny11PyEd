@@ -1,12 +1,29 @@
 # based upon
-#  tiny11Coremaker.ps
-# by Tiny11 by ntdevlabs - https://github.com/ntdevlabs/tiny11builder
+#  tiny11maker.ps
+# by ntdevlabs - https://github.com/ntdevlabs/tiny11builder
 # 5 June 2024
 # 
 #  Todo: check if script is running with local admin privileges.
-#  Probably implment this last or later at least
+#  Probably implement this last or later at least
 # 
 import os
+
+def checkUserInputYorN(userYNChoice: str) -> bool:
+    userYNChoice = input(f"Alternatively, would you like to create the directory? (Y/n default: Y) ").strip().lower()
+    if userYNChoice == "y" or userYNChoice == "":
+        return True
+    else:
+        return False
+
+
+#        if CheckOnMkDir(setworkpath):
+#            print(f"Path '{setworkpath}' successfully created  ")
+#            return setworkpath
+#        else:
+#            set_temp_dir()
+#    else:
+#        set_temp_dir()
+
 
 def is_dism_available():
     """
@@ -43,16 +60,6 @@ def set_temp_dir():
     d) do appropriate exist checks on paths where required
     It could still use some work but it's close enough for now.
      """
-# Ideas for later:
-# Report free space of the SystemRoot (C:) drive and compare to estimated required. 
-# Also other ideas to be filled in here
-#      
-
-#    if os.path.exists(defpath):        
-#        print(f"defpath is {defpath}")
-#    else:
-#        os.makedirs(defpath)
-#        print(f"Folder successfully created: {defpath}")
         
     defpath = os.getenv('USERPROFILE') + """\documents\\tiny11"""
             
@@ -65,7 +72,7 @@ def set_temp_dir():
     if setworkpath == "":
         print(f"Working directory set to default location of {defpath}")
 #        defpath = os.getenv('USERPROFILE') + "\documents\\tiny11"
-        if os.path.exists(defpath):       
+        if checkIfPathExists(defpath): #os.path.exists(defpath):       
             print(f"The default path of {defpath} is being used.")
             return defpath 
             
@@ -78,7 +85,7 @@ def set_temp_dir():
                 set_temp_dir()
 
     elif setworkpath != "":
-        if os.path.exists(setworkpath):
+        if checkIfPathExists(setworkpath): # os.path.exists(setworkpath):
             print(f"Working directory set to '{setworkpath}'")
             return setworkpath
         else:
@@ -88,20 +95,13 @@ def set_temp_dir():
 \n3. also try shift+right click to copy as path a folder and paste (and remove quotes) \
 \n- on Win 11 you may have to `see more options` \
 \n") 
-            YNCreateDir = input(f"Alternatively, would you like to create directory {setworkpath}? (Y/N) ").strip().lower()
-            if YNCreateDir == "y":
+            #YNCreateDir = input(f"Alternatively, would you like to create directory {setworkpath}? (Y/N) ").strip().lower()
+            if checkUserInputYorN(): #YNCreateDir == "y":
                 if CheckOnMkDir(setworkpath):
                     print(f"Path '{setworkpath}' successfully created  ")
                     return setworkpath
                 else:
-                    #print(f"Attempt to create path {defpath} resulted in error {CheckOnMkDir()}")
                     set_temp_dir()
-#                try: 
-#                    os.makedirs(setworkpath)
-#                    print(f"Successfully created path {setworkpath}")
-#                except OSError as e:
-#                    print(f"Unable to create path {setworkpath}, please try again. Error message: {e}.")
-#                    set_temp_dir()
             else:
                 set_temp_dir()
 
@@ -125,13 +125,7 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
 
 
 
-
-
-
-
-
-
-def SetWindowsSourcePath():
+def SetWindowsSourcePath() -> str:
     print("Please specifiy a path for the root of a Windows 11 installations source. \
 \nThis can be a mounted ISO, a physical CD/DVD drive with an install disk, \
 \nor a directory (extracted from an ISO for instance). The 'root' will have a 'sources' subfolder \
@@ -145,25 +139,53 @@ def SetWindowsSourcePath():
 #    This srcpath is true thing is worst way to do this. But I don't feel like making it more
 #   elegant at the moment so it'll have to do.
 
-    if winSourcePath != "":
-        srcpath = True
-    else:
-        srcpath = False
+    srcpath = checkIfPathExists(winSourcePath) # os.path.exists(winSourcePath)
+
     
-    if os.path.exists(winSourcePath):
+    if srcpath:
         print(f"Install directory source set to '{winSourcePath}'")
         return winSourcePath
-    elif not srcpath:
-        print(f"Please enter a path")
-        SetWindowsSourcePath()
     else:
-        print(f"Please enter a path")
+        print(f"Path {winSourcePath} not found. Please enter a path.\n")
         SetWindowsSourcePath()
-                
+
+def checkIfPathExists(PathToCheck: str) -> bool:
+    """probably unncecessary abstraction to os.path.exists
+    Possible ToDo: make sure this works if passed in path has spaces in it
+    if that makes it not work come up with a way to deal with it
+    """
+    PathToCheck = PathToCheck.strip().lower()
+    if os.path.exists(PathToCheck):
+        return True
+    else:
+        return False
+
+
+
+def checkWIMorESDFileExists(WinInstallSourceRoot: str):
+    WImfillPath = """\\sources\\install.wim"""
+    ESDfillPath = """\\sources\\install.esd"""
+    
+    WimPath = WinInstallSourceRoot + WImfillPath
+    ESDPath = WinInstallSourceRoot + ESDfillPath
+    
+    if checkIfPathExists(WimPath):
+        print(f"WIM file {WimPath} found")
+        return WimPath
+    elif checkIfPathExists(ESDPath):
+        print(f"ESD file {ESDPath} found")
+        return ESDPath
+    else:
+        print(f"No WIM or ESD file found at specified location")
+        return ""
+        
+
 
 
 if __name__ == "__main__":
 #    cpu_arch = get_processor_architecture()
 #    set_temp_dir()
     
-    SetWindowsSourcePath()
+#    SetWindowsSourcePath()
+    #checkWIMorESDFileExists("P:\ISOs\Win 11\Win11_23H2_English_x64v2")
+    checkWIMorESDFileExists(SetWindowsSourcePath())

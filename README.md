@@ -1,11 +1,11 @@
-# Tiny11Builder - TCE
+# Tiny11Builder - Python Edition
 
 Scripts to build a trimmed-down Windows 11 image - now in...Python?
 
-Below I have something of development log (in case you have a need to read boring stuff). 
+Below I have something of a development log (in case you have a need to read boring stuff). 
 <p>
 
-Thi started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source. But I don't think I'll be doing any pull requests. Today I decided to save the fork repo for a PS edition fork and save this python edition to a separate repo. That went about as well as I expected. But it work apparently.
+This started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source.  Today I decided to save the fork repo for a PS edition fork and save this python edition to a separate repo. That went about as well as I expected (time consuming/difficult).
 
 </p>
 
@@ -13,28 +13,32 @@ Thi started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/
 
 Just so there's no confusion here, I don't think this will ever replace the PS version of this script. And there's no reason to write this in Python given the advantages of using PS for the purpose. This is more of an exercise than anything else.
 
-Also, One of the main motivations for wanting to re-write this (besides Python practice) is the amount time it takes to generate the new ISO (I'm hoping I can improve on the time required). I am also working on much more communications with the user. 
+Also, One of the main motivations for wanting to re-write this (besides Python practice) is the amount time it takes for the various tasks, such as generating the new ISO (I'm hoping I can improve on the time required). I am also working on much more communications with the user. 
 
 I might actually come back and re-write it using actually PS too. Or you know re-write my Python script based on a PS script...in PS.
 
 </p>
 
 <p>
-Since I've been working on Python recently I wanted to see if I could recreate the functionality using Python. 
-</p>
-<p>
 I haven't dissected the PS script yet but I should be able to support Windows 10 and 11 and any architecture (though since I don't care about ARM that will be at the bottom of the priority list).
 </p>
+
 <p>
 One possible disadvantage of using this version is needing an install of Python (I wasn't planning to convert to exe).
 </p>
+
 <p>
 
 I'm not sure yet if I'll utilize the same approach to creating a bootable ISO using oscdimg but I likely will not be able to get around using DISM. I will use the included unattend file at as a base for my own - I happen to have my own unattend files and want to skip a lot more things (like UELA agreement checkbox, keyboard language/layout and OS language).
+
 </p>
+
 <p>
+
 Like the original, this is open-source, **so feel free to add or remove anything you want!** Feedback is also much appreciated.
+
 </p>
+
 <p>
 
 It's too soon to say if I'll try to also reproduce  **tiny11 core builder**.  I will have to save that for last and deicied if it's worthwhile.
@@ -255,7 +259,14 @@ There's another instance where I copy/pasted some code which should obviously al
 
 Writing that sparked a random thougt: would it be possible to set some the tasks in the script as a background process with python? For instance in doing the file copy of the install source to the working directory could I put that in the back ground then continue the script to get to the ESD/WIM conversion and put that into the background and continue. Then I might have to also have progress bars always on the screen too. But that probably isn't a big deal. Also have to handle error message gracefully as well. That could be harder. Maybe if I partioned the screen up. That's a thing, right?
 
+### 18 June 2024
 
+I made some helper or "utility" functions and started implementing in the functions they're needed. I also made the first function towards the task of converting an install.esd to install.wim if found.
 
+I also added the try/except of the script. I was having an issue returning the value of an error for the calling function to utilize. I assume that's possible.
+
+I think next I'll probably create the main menu function.
+
+### 19 June 2024
 
 </p>
