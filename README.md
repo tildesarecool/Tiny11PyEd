@@ -269,4 +269,6 @@ I think next I'll probably create the main menu function.
 
 ### 19 June 2024
 
+I started on the main menu. It has some choices and calls some functions but doesn't actually do anything yet.
+
 </p>

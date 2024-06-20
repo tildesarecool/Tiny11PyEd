@@ -30,7 +30,8 @@ def is_dism_available():
     Return bool for whether DISM is available on system.
     """
     # Use os.system to run 'dism /?' and check if it returns 0
-    return os.system('dism /?') == 0
+    foundDismOrNot = os.system('cmd /c dism /? >null') == 0
+    return foundDismOrNot
 
 def buildUpDismCLI():
     if is_dism_available():
@@ -179,7 +180,38 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str):
         print(f"No WIM or ESD file found at specified location")
         return ""
         
-
+#\n 5.\tSet windows source path \
+def MainMenu():
+    print(f"Welcome to Tiny11 - Python Edition\n \
+\n\n Please choose from the folowing options:  \
+\n 0.\tQuit \
+\n 1.\tSet Windows install source directory (currently Not set) \
+\n 2.\tSet Temp eg `scratch` directory (currently Not set) \
+\n 3.\tView/edit Settings \
+\n 4.\tCheck if ESD/Wim file exists \
+\n 5.\tCheck if dism available \
+\n\n999.\t!!Just do the thing already!! \
+")
+    userReply = input().strip().lower()
+    if int(userReply) == 0 or int(userReply) == "":
+        exit()
+    elif int(userReply) == 1:
+        SetWindowsSourcePath()
+    elif int(userReply) == 2:
+        set_temp_dir()
+    elif int(userReply) == 3:
+        print("menu for saving settings to json etc coming soon. For now place holder")
+        pass
+    elif int(userReply) == 4:
+        checkWIMorESDFileExists("P:\ISOs\Win 11\Win11_23H2_English_x64v2")
+    elif int(userReply) == 5:
+        print(f"Found DISM value is: {is_dism_available()}")        
+    elif int(userReply) == 999:
+        print("Eventually this will do something. For now place holder")
+        pass
+#    elif int(userReply) == 6:
+                                
+        
 
 
 if __name__ == "__main__":
@@ -188,4 +220,6 @@ if __name__ == "__main__":
     
 #    SetWindowsSourcePath()
     #checkWIMorESDFileExists("P:\ISOs\Win 11\Win11_23H2_English_x64v2")
-    checkWIMorESDFileExists(SetWindowsSourcePath())
+    #checkWIMorESDFileExists(SetWindowsSourcePath())
+    
+    MainMenu()
