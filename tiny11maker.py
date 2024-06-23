@@ -15,16 +15,6 @@ def checkUserInputYorN(userYNChoice: str) -> bool:
     else:
         return False
 
-
-#        if CheckOnMkDir(setworkpath):
-#            print(f"Path '{setworkpath}' successfully created  ")
-#            return setworkpath
-#        else:
-#            set_temp_dir()
-#    else:
-#        set_temp_dir()
-
-
 def is_dism_available():
     """
     Return bool for whether DISM is available on system.
@@ -97,7 +87,7 @@ def set_temp_dir():
 \n- on Win 11 you may have to `see more options` \
 \n") 
             #YNCreateDir = input(f"Alternatively, would you like to create directory {setworkpath}? (Y/N) ").strip().lower()
-            if checkUserInputYorN(): #YNCreateDir == "y":
+            if checkUserInputYorN(y): #YNCreateDir == "y":
                 if CheckOnMkDir(setworkpath):
                     print(f"Path '{setworkpath}' successfully created  ")
                     return setworkpath
@@ -182,35 +172,53 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str):
         
 #\n 5.\tSet windows source path \
 def MainMenu():
+    
     print(f"Welcome to Tiny11 - Python Edition\n \
 \n\n Please choose from the folowing options:  \
 \n 0.\tQuit \
-\n 1.\tSet Windows install source directory (currently Not set) \
-\n 2.\tSet Temp eg `scratch` directory (currently Not set) \
+\n 1.\tSet Windows install source directory  \
+\n 2.\tSet Temp eg `scratch` directory \
 \n 3.\tView/edit Settings \
 \n 4.\tCheck if ESD/Wim file exists \
 \n 5.\tCheck if dism available \
 \n\n999.\t!!Just do the thing already!! \
 ")
     userReply = input().strip().lower()
-    if int(userReply) == 0 or int(userReply) == "":
+
+    if int(userReply) == 0 or userReply == "":
         exit()
     elif int(userReply) == 1:
-        SetWindowsSourcePath()
+        srcPath = SetWindowsSourcePath()
+        MainMenu()
     elif int(userReply) == 2:
-        set_temp_dir()
+        tempDir = set_temp_dir()
     elif int(userReply) == 3:
         print("menu for saving settings to json etc coming soon. For now place holder")
         pass
     elif int(userReply) == 4:
-        checkWIMorESDFileExists("P:\ISOs\Win 11\Win11_23H2_English_x64v2")
+        WimEsd = checkWIMorESDFileExists(srcPath)
     elif int(userReply) == 5:
         print(f"Found DISM value is: {is_dism_available()}")        
     elif int(userReply) == 999:
         print("Eventually this will do something. For now place holder")
         pass
 #    elif int(userReply) == 6:
-                                
+
+    if srcPath:
+        print(f"Windows Source Path set to {srcPath}")
+    else:
+        print("Source path not set")
+
+    if tempDir:
+        print(f"Temp dir currently set to {tempDir}")
+    else:
+        print("temp dir not set")
+
+
+
+#    print(f"")
+#    print(f"")
+#    print(f"")
         
 
 
