@@ -8,6 +8,17 @@
 # 
 import os
 
+
+srcPath = None
+MenuItemTitle     = f"""Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:"""
+MenuItemZero      = f"""\n 0.\tQuit """
+MenuItemOne       = f""" 1.\tSet Windows install source directory  """
+MenuItemTwo       = f""" 2.\tSet Temp eg `scratch` directory """
+MenuItemThree     = f""" 3.\tView/edit Settings """
+MenuItemFour      = f""" 4.\tCheck if ESD/Wim file exists """
+MenuItemFive      = f""" 5.\tCheck if dism available """
+MenuItemNineNine  = f"""\n999.\t!!Just do the thing already!! """
+
 def checkUserInputYorN(userYNChoice: str) -> bool:
     userYNChoice = input(f"Alternatively, would you like to create the directory? (Y/n default: Y) ").strip().lower()
     if userYNChoice == "y" or userYNChoice == "":
@@ -173,54 +184,68 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str):
 #\n 5.\tSet windows source path \
 def MainMenu():
     
-    print(f"Welcome to Tiny11 - Python Edition\n \
-\n\n Please choose from the folowing options:  \
-\n 0.\tQuit \
-\n 1.\tSet Windows install source directory  \
-\n 2.\tSet Temp eg `scratch` directory \
-\n 3.\tView/edit Settings \
-\n 4.\tCheck if ESD/Wim file exists \
-\n 5.\tCheck if dism available \
-\n\n999.\t!!Just do the thing already!! \
-")
-    userReply = input().strip().lower()
+    global srcPath
+    global MenuItemTitle
+    global MenuItemZero
+    global MenuItemOne
+    global MenuItemTwo
+    global MenuItemThree
+    global MenuItemFour
+    global MenuItemFive
+    global MenuItemNineNine
 
-    if int(userReply) == 0 or userReply == "":
+    print(MenuItemTitle) 
+    print(MenuItemZero)
+    print(MenuItemOne)
+    print(MenuItemTwo)
+    print(MenuItemThree)
+    print(MenuItemFour)
+    print(MenuItemFive)
+    print(MenuItemNineNine)
+
+
+    userReply = input().strip().lower()    
+
+    if int(userReply) == 0 or userReply == "": 
         exit()
+
     elif int(userReply) == 1:
         srcPath = SetWindowsSourcePath()
+        print(f"Windows Source Path set to {srcPath}")
+
         MainMenu()
     elif int(userReply) == 2:
         tempDir = set_temp_dir()
+        MainMenu()
     elif int(userReply) == 3:
         print("menu for saving settings to json etc coming soon. For now place holder")
+        MainMenu()
         pass
     elif int(userReply) == 4:
-        WimEsd = checkWIMorESDFileExists(srcPath)
+        if srcPath is not None:
+            
+            WimEsd = checkWIMorESDFileExists(srcPath)
+            print(f"--VALUE OF wimESD IS {WimEsd}--")
+        else:
+            print("Path not yet set")
+        
+        #WimEsd = checkWIMorESDFileExists(srcPath)
+        MainMenu()
     elif int(userReply) == 5:
         print(f"Found DISM value is: {is_dism_available()}")        
+        MainMenu()
     elif int(userReply) == 999:
         print("Eventually this will do something. For now place holder")
+        MainMenu()
         pass
-#    elif int(userReply) == 6:
-
-    if srcPath:
-        print(f"Windows Source Path set to {srcPath}")
-    else:
-        print("Source path not set")
-
     if tempDir:
         print(f"Temp dir currently set to {tempDir}")
     else:
         print("temp dir not set")
 
-
-
 #    print(f"")
 #    print(f"")
 #    print(f"")
-        
-
 
 if __name__ == "__main__":
 #    cpu_arch = get_processor_architecture()
