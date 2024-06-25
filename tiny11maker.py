@@ -8,16 +8,44 @@
 # 
 import os
 
-
 srcPath = None
-MenuItemTitle     = f"""Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:"""
-MenuItemZero      = f"""\n 0.\tQuit """
-MenuItemOne       = f""" 1.\tSet Windows install source directory  """
-MenuItemTwo       = f""" 2.\tSet Temp eg `scratch` directory """
-MenuItemThree     = f""" 3.\tView/edit Settings """
-MenuItemFour      = f""" 4.\tCheck if ESD/Wim file exists """
-MenuItemFive      = f""" 5.\tCheck if dism available """
-MenuItemNineNine  = f"""\n999.\t!!Just do the thing already!! """
+tempDir = None
+
+menu_items = "0.\tQuit action" # 
+#\n1.\tSet Windows install source directory \
+#\n2.\tSet Temp eg `scratch` directory \
+#\n3.\tView/edit Settings \
+#\n4.\tCheck if ESD/Wim file exists  \
+#\n5.\tCheck if dism available action: is_dism_available \
+#\n999.\t!!Just do the thing already!! \
+#"
+
+
+def menu_list(menu):
+    menu_collect = []
+#    
+    split_input = menu.split("\t")
+    
+    for m_items in range(len(split_input)):
+        indexer = split_input[m_items]
+        indexer = indexer.splitlines()
+#        
+        menu_collect.append(indexer)
+    
+    for list_cont in range(len(menu_collect)):
+        print(f"content is {menu_collect[list_cont]}")
+    
+#    print(menu)
+#    print(split_input)    
+#    print(menu_collect)
+
+
+#title:
+#title:
+#title:
+#title:
+#title:
+#title:
 
 def checkUserInputYorN(userYNChoice: str) -> bool:
     userYNChoice = input(f"Alternatively, would you like to create the directory? (Y/n default: Y) ").strip().lower()
@@ -181,71 +209,59 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str):
         print(f"No WIM or ESD file found at specified location")
         return ""
         
+        
+def action_save_settings():
+    print("menu for saving settings to json etc coming soon. For now place holder")
 #\n 5.\tSet windows source path \
+    
+    
+def action_placeholder():
+    print("Eventually this will do something. For now place holder")
+    
+    
 def MainMenu():
     
-    global srcPath
-    global MenuItemTitle
-    global MenuItemZero
-    global MenuItemOne
-    global MenuItemTwo
-    global MenuItemThree
-    global MenuItemFour
-    global MenuItemFive
-    global MenuItemNineNine
-
-    print(MenuItemTitle) 
-    print(MenuItemZero)
-    print(MenuItemOne)
-    print(MenuItemTwo)
-    print(MenuItemThree)
-    print(MenuItemFour)
-    print(MenuItemFive)
-    print(MenuItemNineNine)
-
-
-    userReply = input().strip().lower()    
-
-    if int(userReply) == 0 or userReply == "": 
-        exit()
-
-    elif int(userReply) == 1:
-        srcPath = SetWindowsSourcePath()
-        print(f"Windows Source Path set to {srcPath}")
-
-        MainMenu()
-    elif int(userReply) == 2:
-        tempDir = set_temp_dir()
-        MainMenu()
-    elif int(userReply) == 3:
-        print("menu for saving settings to json etc coming soon. For now place holder")
-        MainMenu()
-        pass
-    elif int(userReply) == 4:
-        if srcPath is not None:
+    while True:
+        print("Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:")
+    
+        for item in menu_items:
+            print(item["title"])
             
-            WimEsd = checkWIMorESDFileExists(srcPath)
-            print(f"--VALUE OF wimESD IS {WimEsd}--")
-        else:
-            print("Path not yet set")
+        userReply = input("Choose an option: ").strip().lower()
         
-        #WimEsd = checkWIMorESDFileExists(srcPath)
-        MainMenu()
-    elif int(userReply) == 5:
-        print(f"Found DISM value is: {is_dism_available()}")        
-        MainMenu()
-    elif int(userReply) == 999:
-        print("Eventually this will do something. For now place holder")
-        MainMenu()
-        pass
-    if tempDir:
-        print(f"Temp dir currently set to {tempDir}")
-    else:
-        print("temp dir not set")
+        try:
+            user_choice = int(userReply)
+            
+            action = next((item["action"] for item in menu_items if int(item["title"].split('.')[0]) == user_choice), None)
+            
+            if action:
+                action()
+            else:
+                print("Invalid choice, please try again.")
+                
+        except ValueError:
+                print("Invalid choice, please try again.")
 
-#    print(f"")
-#    print(f"")
-#    print(f"")
+
+
+
+
+#menu_items = [
+#
+##    {"title": "Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:" , "action": action_placeholder },
+#    {"title": "\n 0.\tQuit " , "action": exit},
+#    {"title": " 1.\tSet Windows install source directory", "action": SetWindowsSourcePath},
+#    {"title": " 2.\tSet Temp eg `scratch` directory ", "action": set_temp_dir },
+#    {"title": " 3.\tView/edit Settings " , "action": action_save_settings},
+#    {"title": " 4.\tCheck if ESD/Wim file exists " , "action": checkIfPathExists },
+#    {"title": " 5.\tCheck if dism available " , "action": is_dism_available},
+#    {"title": "\n999.\t!!Just do the thing already!! ", "action": action_placeholder }
+#
+#]
+
+
+
+
 
 if __name__ == "__main__":
 #    cpu_arch = get_processor_architecture()
@@ -254,5 +270,89 @@ if __name__ == "__main__":
 #    SetWindowsSourcePath()
     #checkWIMorESDFileExists("P:\ISOs\Win 11\Win11_23H2_English_x64v2")
     #checkWIMorESDFileExists(SetWindowsSourcePath())
-    
-    MainMenu()
+
+#########    
+#    MainMenu()
+##########
+
+    menu_list(menu_items)
+
+
+
+
+
+#    global srcPath
+#    global MenuItemTitle
+#    global MenuItemZero
+#    global MenuItemOne
+#    global MenuItemTwo
+#    global MenuItemThree
+#    global MenuItemFour
+#    global MenuItemFive
+#    global MenuItemNineNine
+#
+#    print(MenuItemTitle) 
+#    print(MenuItemZero)
+#    print(MenuItemOne)
+#    print(MenuItemTwo)
+#    print(MenuItemThree)
+#    print(MenuItemFour)
+#    print(MenuItemFive)
+#    print(MenuItemNineNine)
+#
+#
+#    userReply = input().strip().lower()    
+#
+#    if int(userReply) == 0 or userReply == "": 
+#        exit()
+#
+#    elif int(userReply) == 1:
+#        srcPath = SetWindowsSourcePath()
+#        print(f"Windows Source Path set to {srcPath}")
+#
+#        MainMenu()
+#    elif int(userReply) == 2:
+#        tempDir = set_temp_dir()
+#        MainMenu()
+#    elif int(userReply) == 3:
+#        print("menu for saving settings to json etc coming soon. For now place holder")
+#        MainMenu()
+#        pass
+#    elif int(userReply) == 4:
+#        if srcPath is not None:
+#            
+#            WimEsd = checkWIMorESDFileExists(srcPath)
+#            print(f"--VALUE OF wimESD IS {WimEsd}--")
+#        else:
+#            print("Path not yet set")
+#        
+#        #WimEsd = checkWIMorESDFileExists(srcPath)
+#        MainMenu()
+#    elif int(userReply) == 5:
+#        print(f"Found DISM value is: {is_dism_available()}")        
+#        MainMenu()
+#    elif int(userReply) == 999:
+#        print("Eventually this will do something. For now place holder")
+#        MainMenu()
+#        pass
+#    if tempDir:
+#        print(f"Temp dir currently set to {tempDir}")
+#    else:
+#        print("temp dir not set")
+
+#    print(f"")
+#    print(f"")
+#    print(f"")
+
+
+
+# MenuItemTitle
+# MenuItemZero
+# MenuItemOne
+# MenuItemTwo
+# MenuItemThree
+# MenuItemFour
+# MenuItemFive
+# MenuItemNineNine
+
+#"title": "Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:" , "action": action_placeholder 
