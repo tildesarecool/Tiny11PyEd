@@ -14,6 +14,7 @@ if ((Get-ExecutionPolicy) -eq 'Restricted') {
 }
 
 # Check and run the script as admin if required
+
 $adminSID = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-544")
 $adminGroup = $adminSID.Translate([System.Security.Principal.NTAccount])
 $myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
@@ -40,6 +41,8 @@ Start-Transcript -Path "$PSScriptRoot\tiny11.log"
 $Host.UI.RawUI.WindowTitle = "Tiny11 image creator"
 Clear-Host
 Write-Host "Welcome to the tiny11 image creator! Release: 05-06-24"
+
+################ get architecture and prompt for drive letter (w/out colon for some reason)
 
 $hostArchitecture = $Env:PROCESSOR_ARCHITECTURE
 New-Item -ItemType Directory -Force -Path "$ScratchDisk\tiny11\sources" >null

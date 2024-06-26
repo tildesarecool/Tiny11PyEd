@@ -275,4 +275,12 @@ I started on the main menu. It has some choices and calls some functions but doe
 
 I continued to work on the menu system and managed to make it worse I think. I might have to come back to this.
 
+### 25 June 2024
+
+I decided to put the menu system on hold while I work on more functionality of the actual script: I wrote a new function for converting an install.ESD to an install.WIM file. 
+
+Actually it's not technically done. I'm still working on making python call the DISM command. My testing so far has only involved printing the final DISM command and my manually copy/pasting that output into PowerShell. I have found a solution though so that will likely come in tomorrow.
+
+
+
 </p>
