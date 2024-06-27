@@ -68,7 +68,7 @@ def getIndexNumberPref():
         print("Attempting to get ESD/WIM info now...")
         result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
         print("Info gathered successfully:")
-        DISMOutput = result.stdout
+        DISMOutput = result.stdout.strip("\n")
         #print(f"Output return is \n{result.stdout}")
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code: {e.returncode}")
@@ -79,15 +79,17 @@ def getIndexNumberPref():
         print(f"An unexpected error occurred: {e}")
         
     #print(f"Output return is \n{result.stdout}")
-    print(DISMOutput[6])
+    #print(DISMOutput)
+    return DISMOutput
     
-getIndexNumberPref()
+#getIndexNumberPref()
 
 def converIndexList(index_input) -> list:
     
     list_collect = []
     
-    split_input = index_input.split("\n\n")
+    #split_input = index_input.split("\n\n") # have to use a different split character because of wim info output formatting
+    split_input = index_input.split("Index")
 #    split_input = split_input[0]
     #print(f"value of split_input outside for loop is \n{split_input}" )
     for indecies in range(len(split_input)):
@@ -110,9 +112,10 @@ def converIndexList(index_input) -> list:
     return list_collect
 
 def processWimInfo():
-    dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
+    #dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
 
-    processInput = converIndexList(sample_input)
+    #processInput = converIndexList(sample_input)
+    processInput = converIndexList(getIndexNumberPref())
 
     for osIndexes in processInput:
     #    print(f"OS {osIndexes[1]} is selection: {osIndexes[0]}  \t")
@@ -134,19 +137,10 @@ def processWimInfo():
     
     dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
     print(dismWimIndexCMD)
-                
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
-        #        elif int(response) == 0:
 
     return response
+
+processWimInfo()
 
 #f"""
 #$dismOutput = & dism /English /Get-WimInfo /wimfile:'{ESDPath}'
@@ -179,7 +173,16 @@ def processWimInfo():
 #    
 #    print(f"after after enjoinment, value of entry one is \n{entry_one}" )
     
-
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
+        #        elif int(response) == 0:
     
 #first_index = sample_input.split("\n\n")
 #
