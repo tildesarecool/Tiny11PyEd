@@ -58,6 +58,31 @@ Size : 18,240,830,013 bytes"""
 #sample_input.s
 
 
+def getIndexNumberPref():
+    ESDPath = """P:\ISOs\Windows10-22h2\sources\install.esd"""
+    DISMgetInfo = f"""
+& dism /English /Get-WimInfo /wimfile:'{ESDPath}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'
+"""
+
+    try:    
+        print("Attempting to get ESD/WIM info now...")
+        result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
+        print("Info gathered successfully:")
+        DISMOutput = result.stdout
+        #print(f"Output return is \n{result.stdout}")
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed with return code: {e.returncode}")
+        print(e.stderr)
+    except FileNotFoundError as e:
+        print(f"PowerShell not found: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        
+    #print(f"Output return is \n{result.stdout}")
+    print(DISMOutput[6])
+    
+getIndexNumberPref()
+
 def converIndexList(index_input) -> list:
     
     list_collect = []
@@ -123,7 +148,15 @@ def processWimInfo():
 
     return response
 
-processWimInfo()
+#f"""
+#$dismOutput = & dism /English /Get-WimInfo /wimfile:'{ESDPath}'
+#$startIndex = $dismOutput.IndexOf($dismOutput | Select-String -Pattern 'Index :' | Select-Object -First 1)
+#$filteredOutput = $dismOutput.Substring($startIndex)
+#$filteredOutput
+#"""
+
+
+#processWimInfo()
 
 ######### only if i want to convert to string really bad
 #        indexer = "\n".join(indexer)

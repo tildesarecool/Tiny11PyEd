@@ -6,7 +6,7 @@
 #  Todo: check if script is running with local admin privileges.
 #  Probably implement this last or later at least
 # 
-import os
+import os, subprocess
 
 srcPath = None
 tempDir = None
@@ -347,29 +347,45 @@ def processWimInfo():
 
     return response
 
-
 def convertESDtoWIM(ESDToConvertPath: str, WIMDestPath: str ):
-    #destPath = f"{os.getenv('USERPROFILE')}\documents\\tiny11"
-    #destPath = checkWIMorESDFileExists("P:\ISOs\Windows10-22h2")
-    
-    print(f"Your source folder has an install.esd file: Tiny 11 can only work with WIM files in order to \"Tiny it\". On a Core i7 from 2019 this takes about 7 minutes")
+    print(f"Your source folder has an install.esd file: Tiny 11 can only work with WIM files in order to \"Tiny it\". \nOn a Core i7 from 2019 this takes about 7 minutes")
     print(f"Source ESD file location: {ESDToConvertPath}\nInstall.wim file will be saved to: {WIMDestPath}")
     
     if ESDToConvertPath[-1] == "d":
-        #buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'P:\ISOs\Windows10-22h2\sources\install.esd' /SourceIndex:3 /DestinationImageFile:'{destPath}\install.wim' /Compress:max /CheckIntegrity"""
-        buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'{ESDToConvertPath}' /SourceIndex:3 /DestinationImageFile:'{WIMDestPath}\install.wim' /Compress:max /CheckIntegrity"""
-#    buildDISMTwo = f"'P:\ISOs\Windows10-22h2\sources\install.esd' /SourceIndex:3 /DestinationImageFile:"""
-#    buildDISMThree = f"'{destPath}\install.wim /Compress:max /CheckIntegrity'"
 
-#    buildDISMFinal = f"{buildDISMOne}{buildDISMTwo}{buildDISMThree}{buildDISMThree}"
+        buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'{ESDToConvertPath}' /SourceIndex:3 /DestinationImageFile:'{WIMDestPath}\install.wim' /Compress:max /CheckIntegrity"""
     
-        print(f"\nNow running conversion line --> \n")
-        os.system(buildDISMFinal)
+#        print(f"\nNow running conversion line --> \n")
+        try:
+            print("Starting ESD to WIM conversion now...")
+            result = subprocess.run(["powershell", "-Command", buildDISMFinal], capture_output=True, text=True, check=True)
+            print("Conversion completed successfully")
+            print(result.stdout)
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed with return code: {e.returncode}")
+            print(e.stderr)
+        except FileNotFoundError as e:
+            print(f"PowerShell not found: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+        
+
+#        os.system(buildDISMFinal)
+
+
 
 
 if __name__ == "__main__":
     convertESDtoWIM(checkWIMorESDFileExists("""P:\ISOs\Windows10-22h2"""), set_temp_dir() ) # f"""{ os.getenv('USERPROFILE')}\documents\\tiny11""")
 
+
+    #destPath = f"{os.getenv('USERPROFILE')}\documents\\tiny11"
+    #destPath = checkWIMorESDFileExists("P:\ISOs\Windows10-22h2")
+        #buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'P:\ISOs\Windows10-22h2\sources\install.esd' /SourceIndex:3 /DestinationImageFile:'{destPath}\install.wim' /Compress:max /CheckIntegrity"""
+#    buildDISMTwo = f"'P:\ISOs\Windows10-22h2\sources\install.esd' /SourceIndex:3 /DestinationImageFile:"""
+#    buildDISMThree = f"'{destPath}\install.wim /Compress:max /CheckIntegrity'"
+
+#    buildDISMFinal = f"{buildDISMOne}{buildDISMTwo}{buildDISMThree}{buildDISMThree}"
 
 # & DISM /Export-Image /SourceImageFile:P:\ISOs\Windows10-22h2\sources\install.esd /SourceIndex:3 /DestinationImageFile:'C:\Users\Keith\documents\tiny11\install.wim' /Compress:max /CheckIntegrity
 

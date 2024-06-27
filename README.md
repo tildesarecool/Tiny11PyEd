@@ -281,6 +281,10 @@ I decided to put the menu system on hold while I work on more functionality of t
 
 Actually it's not technically done. I'm still working on making python call the DISM command. My testing so far has only involved printing the final DISM command and my manually copy/pasting that output into PowerShell. I have found a solution though so that will likely come in tomorrow.
 
+### 26 June 2024
+
+I've worked further on the best way to get the output from various powershell commands and save the output. I think I made progress on this but there's still many steps left.
+
 
 
 </p>
