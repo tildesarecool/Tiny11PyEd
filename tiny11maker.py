@@ -7,67 +7,8 @@
 #  Probably implement this last or later at least
 # 
 import os, subprocess
-
-srcPath = None
-tempDir = None
-
-sample_input = """Index : 1
-Name : Windows 11 Home
-Description : Windows 11 Home
-Size : 18,638,210,474 bytes
-
-Index : 2
-Name : Windows 11 Home N
-Description : Windows 11 Home N
-Size : 17,934,598,356 bytes
-
-Index : 3
-Name : Windows 11 Home Single Language
-Description : Windows 11 Home Single Language
-Size : 18,601,482,575 bytes
-
-Index : 4
-Name : Windows 11 Education
-Description : Windows 11 Education
-Size : 18,903,796,443 bytes
-
-Index : 5
-Name : Windows 11 Education N
-Description : Windows 11 Education N
-Size : 18,240,855,358 bytes
-
-Index : 6
-Name : Windows 11 Pro
-Description : Windows 11 Pro
-Size : 18,936,583,647 bytes
-
-Index : 7
-Name : Windows 11 Pro N
-Description : Windows 11 Pro N
-Size : 18,259,384,849 bytes
-
-Index : 8
-Name : Windows 11 Pro Education
-Description : Windows 11 Pro Education
-Size : 18,903,746,653 bytes
-
-Index : 9
-Name : Windows 11 Pro Education N
-Description : Windows 11 Pro Education N
-Size : 18,240,804,668 bytes
-
-Index : 10
-Name : Windows 11 Pro for Workstations
-Description : Windows 11 Pro for Workstations
-Size : 18,903,771,548 bytes
-
-Index : 11
-Name : Windows 11 Pro N for Workstations
-Description : Windows 11 Pro N for Workstations
-Size : 18,240,830,013 bytes"""
-
-
-
+from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists #, get_processor_architecture
+from globals import srcPath, tempDir, sample_input
 
 menu_items = "0.\tQuit action" # 
 #\n1.\tSet Windows install source directory \
@@ -105,39 +46,8 @@ def menu_list(menu):
 #title:
 #title:
 
-def checkUserInputYorN(userYNChoice: str) -> bool:
-    userYNChoice = input(f"Alternatively, would you like to create the directory? (Y/n default: Y) ").strip().lower()
-    if userYNChoice == "y" or userYNChoice == "":
-        return True
-    else:
-        return False
 
-def is_dism_available():
-    """
-    Return bool for whether DISM is available on system.
-    """
-    # Use os.system to run 'dism /?' and check if it returns 0
-    foundDismOrNot = os.system('cmd /c dism /? >null') == 0
-    return foundDismOrNot
 
-def buildUpDismCLI():
-    if is_dism_available():
-        
-        pass
-
-def get_processor_architecture():
-    """ 
-    I'm actually not sure what this arch identification is going to be used for. 
-    ---> In the original PS script this is used in a path later on involving looking for 
-    oscdimg.exe file in the ADK installation folder. Not a very high priority, in other words.
-    """
-    # processor_architecture = os.getenv('PROCESSOR_ARCHITECTURE')
-    if os.getenv('PROCESSOR_ARCHITECTURE'):
-        #print("processor arch found")
-        return os.getenv('PROCESSOR_ARCHITECTURE')
-    else:
-        print("no value for processor arch found")
-        return False
 
 def set_temp_dir() -> str:
     """ 
@@ -194,25 +104,6 @@ def set_temp_dir() -> str:
                 set_temp_dir()
 
 
-
-
-def CheckOnMkDir(DirToCreate: str) -> bool:
-    DirToCreate = DirToCreate.strip().lower()
-    try: 
-        os.makedirs(DirToCreate)
-        return True
-        #print(f"Successfully created path {setworkpath}")
-    except OSError as e:
-        #return str(e)
-        
-        print(f"Attempt to create path {DirToCreate} resulted in an error, please try again. \
-\n\nError message for reference: \n\n{e}.\n")
-        
-        return False
-#        set_temp_dir()
-
-
-
 def SetWindowsSourcePath() -> str:
     print("Please specifiy a path for the root of a Windows 11 installations source. \
 \nThis can be a mounted ISO, a physical CD/DVD drive with an install disk, \
@@ -236,18 +127,6 @@ def SetWindowsSourcePath() -> str:
     else:
         print(f"Path {winSourcePath} not found. Please enter a path.\n")
         SetWindowsSourcePath()
-
-def checkIfPathExists(PathToCheck: str) -> bool:
-    """probably unncecessary abstraction to os.path.exists
-    Possible ToDo: make sure this works if passed in path has spaces in it
-    if that makes it not work come up with a way to deal with it
-    """
-    PathToCheck = PathToCheck.strip().lower()
-    if os.path.exists(PathToCheck):
-        return True
-    else:
-        return False
-
 
 
 def checkWIMorESDFileExists(WinInstallSourceRoot: str) -> str:

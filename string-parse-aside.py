@@ -60,35 +60,36 @@ Size : 18,240,830,013 bytes"""
 
 def getIndexNumberPref() -> str:
     ESDPath = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
-    LaptopSrcPath = """C:\\Users\\keith\\Documents\\tiny11\\Win11_23H2_x64v2-unmodified\\sources\\install.wim"""
+#    LaptopSrcPath = """C:\\Users\\keith\\Documents\\tiny11\\Win11_23H2_x64v2-unmodified\\sources\\install.wim"""
 #    DISMgetInfo = f"""
 #& dism /English /Get-WimInfo /wimfile:'{ESDPath}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'
 #"""
 
-    DISMgetInfo = f"""& dism /English /Get-WimInfo /wimfile:'{LaptopSrcPath}'"""#   | Select-String -Pattern 'Index :|Name :|Description :|Size :'""" #.strip("\n")
+    DISMgetInfo = f"""& dism /English /Get-WimInfo /wimfile:'{ESDPath}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'""" #.strip("\n")
 
 
     #print(f"DISMGet info is \n{DISMgetInfo}")
-    print("Attempting to get ESD/WIM info now...")
+    #print("Attempting to get ESD/WIM info now...")
     result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
 #    print("Info gathered successfully:")
     #DISMOutput = result.stdout.strip("\n")
-    print(f"Output return is \n{result.stdout}")
+#    print(f"Output return is \n{result.stdout}")
 
-#    try:    
-#        print("Attempting to get ESD/WIM info now...")
-#        result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
-#        print("Info gathered successfully:")
-#        DISMOutput = result.stdout.strip("\n")
+    try:    
+        print("Attempting to get ESD/WIM info now...")
+        result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
+        print("Info gathered successfully:")
+        DISMOutput = result.stdout.strip("\n")
 #        print(f"Output return is \n{result.stdout}")
-#       # return DISMOutput
-#    except subprocess.CalledProcessError as e:
-#        print(f"Command failed with return code: {e.returncode}")
-#        print(e.stderr)
-#    except FileNotFoundError as e:
-#        print(f"PowerShell not found: {e}")
-#    except Exception as e:
-#        print(f"An unexpected error occurred: {e}")
+#        print(f"Output return is \n{DISMOutput}")
+        return DISMOutput
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed with return code: {e.returncode}")
+        print(e.stderr)
+    except FileNotFoundError as e:
+        print(f"PowerShell not found: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 #    else:
        # return DISMOutput
 
@@ -97,7 +98,7 @@ def getIndexNumberPref() -> str:
     #print(DISMOutput)
     
     
-getIndexNumberPref()
+#print(getIndexNumberPref())
 
 def converIndexList(index_input) -> list:
     

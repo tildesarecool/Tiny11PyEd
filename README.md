@@ -285,8 +285,10 @@ Actually it's not technically done. I'm still working on making python call the 
 
 I've worked further on the best way to get the output from various powershell commands and save the output. I think I made progress on this but there's still many steps left.
 
-### 27 June 2024
+### 28 June 2024
 
+I've been working on this same little bit for what seems like entirely too long. But really I just don't spend enough time per day working on it then stretched out over weeks. 
 
+That's a long way to say I did some re-organizing and refactoring today: firstly I split the main python file into multiple files and secondly I did some refactoring. Hopefully it will be easier to track functions and what they do this way. I often do this on fly. The bob ross approach to programming. Which is definitely the right way.
 
 </p>
