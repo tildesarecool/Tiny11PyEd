@@ -291,4 +291,15 @@ I've been working on this same little bit for what seems like entirely too long.
 
 That's a long way to say I did some re-organizing and refactoring today: firstly I split the main python file into multiple files and secondly I did some refactoring. Hopefully it will be easier to track functions and what they do this way. I often do this on fly. The bob ross approach to programming. Which is definitely the right way.
 
+
+### 1 July 2024
+
+I watch a video yeterday about a constest to parse a one billion column file (two values separated by a semicolon) in the fastest time. The contest was originally created with Java in mind but soon pretty much every language in existance was utlizied. 
+
+I don't know if [the one I've been studying](https://github.com/ifnesi/1brc/blob/main/calculateAverage.py) is actually the fastest python version or not, but it seems really well layed out in only 130 lines or so. 
+
+I utlized ChatGPT to try and learn more about how it works and see if any of the techniques used could utilized for DISM commands and large file copy operations. I asked in a very generic way and got relatively generic answers but the short answer is *probably*.
+
+I'm getting a bit ahead of myself since I haven't even got the basic functionality down yet. But I have some information for when or if I want to do try and implement some of those ideas.
+
 </p>

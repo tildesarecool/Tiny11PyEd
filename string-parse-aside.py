@@ -1,59 +1,6 @@
 import subprocess, os
+from globals import srcPath, tempDir, sample_input
 
-sample_input = """Index : 1
-Name : Windows 11 Home
-Description : Windows 11 Home
-Size : 18,638,210,474 bytes
-
-Index : 2
-Name : Windows 11 Home N
-Description : Windows 11 Home N
-Size : 17,934,598,356 bytes
-
-Index : 3
-Name : Windows 11 Home Single Language
-Description : Windows 11 Home Single Language
-Size : 18,601,482,575 bytes
-
-Index : 4
-Name : Windows 11 Education
-Description : Windows 11 Education
-Size : 18,903,796,443 bytes
-
-Index : 5
-Name : Windows 11 Education N
-Description : Windows 11 Education N
-Size : 18,240,855,358 bytes
-
-Index : 6
-Name : Windows 11 Pro
-Description : Windows 11 Pro
-Size : 18,936,583,647 bytes
-
-Index : 7
-Name : Windows 11 Pro N
-Description : Windows 11 Pro N
-Size : 18,259,384,849 bytes
-
-Index : 8
-Name : Windows 11 Pro Education
-Description : Windows 11 Pro Education
-Size : 18,903,746,653 bytes
-
-Index : 9
-Name : Windows 11 Pro Education N
-Description : Windows 11 Pro Education N
-Size : 18,240,804,668 bytes
-
-Index : 10
-Name : Windows 11 Pro for Workstations
-Description : Windows 11 Pro for Workstations
-Size : 18,903,771,548 bytes
-
-Index : 11
-Name : Windows 11 Pro N for Workstations
-Description : Windows 11 Pro N for Workstations
-Size : 18,240,830,013 bytes"""
 
 #sample_input.s
 
@@ -61,6 +8,7 @@ Size : 18,240,830,013 bytes"""
 def getIndexNumberPref() -> str:
     ESDPath = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 #    LaptopSrcPath = """C:\\Users\\keith\\Documents\\tiny11\\Win11_23H2_x64v2-unmodified\\sources\\install.wim"""
+
 #    DISMgetInfo = f"""
 #& dism /English /Get-WimInfo /wimfile:'{ESDPath}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'
 #"""
@@ -81,7 +29,7 @@ def getIndexNumberPref() -> str:
         print("Info gathered successfully:")
         DISMOutput = result.stdout.strip("\n")
 #        print(f"Output return is \n{result.stdout}")
-#        print(f"Output return is \n{DISMOutput}")
+        print(f"Output return is \n{DISMOutput}")
         return DISMOutput
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code: {e.returncode}")
@@ -92,6 +40,7 @@ def getIndexNumberPref() -> str:
         print(f"An unexpected error occurred: {e}")
 #    else:
        # return DISMOutput
+
 
         
     #print(f"Output return is \n{result.stdout}")
@@ -127,34 +76,34 @@ def converIndexList(index_input) -> list:
     
     return list_collect
 
-def processWimInfo():
-    #dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
-
-    #processInput = converIndexList(sample_input)
-    processInput = converIndexList(getIndexNumberPref())
-
-    for osIndexes in processInput:
-    #    print(f"OS {osIndexes[1]} is selection: {osIndexes[0]}  \t")
-        print(f"{osIndexes[0]}\t for OS {osIndexes[1]}")
-
-    print("0 to quit")
-    response = input("Enter OS choice: ").strip()
-    if response != "":
-#        if int(response) == 0:
-#            print("No OS entered")
-#            pass
-
-        for userIn in range(len(processInput)):
-            print(f"userin is value {userIn}")
-            if int(response) == 0:
-                print("Please enter a number for an OS")
-            elif int(response) == userIn and userIn != 0:
-                response = userIn
-    
-    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
-    print(dismWimIndexCMD)
-
-    return response
+#def processWimInfo():
+#    #dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
+#
+#    #processInput = converIndexList(sample_input)
+#    processInput = converIndexList(getIndexNumberPref())
+#
+#    for osIndexes in processInput:
+#    #    print(f"OS {osIndexes[1]} is selection: {osIndexes[0]}  \t")
+#        print(f"{osIndexes[0]}\t for OS {osIndexes[1]}")
+#
+#    print("0 to quit")
+#    response = input("Enter OS choice: ").strip()
+#    if response != "":
+##        if int(response) == 0:
+##            print("No OS entered")
+##            pass
+#
+#        for userIn in range(len(processInput)):
+#            print(f"userin is value {userIn}")
+#            if int(response) == 0:
+#                print("Please enter a number for an OS")
+#            elif int(response) == userIn and userIn != 0:
+#                response = userIn
+#    
+#    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
+#    print(dismWimIndexCMD)
+#
+#    return response
 
 #processWimInfo()
 

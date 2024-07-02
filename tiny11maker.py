@@ -7,47 +7,8 @@
 #  Probably implement this last or later at least
 # 
 import os, subprocess
-from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists #, get_processor_architecture
-from globals import srcPath, tempDir, sample_input
-
-menu_items = "0.\tQuit action" # 
-#\n1.\tSet Windows install source directory \
-#\n2.\tSet Temp eg `scratch` directory \
-#\n3.\tView/edit Settings \
-#\n4.\tCheck if ESD/Wim file exists  \
-#\n5.\tCheck if dism available action: is_dism_available \
-#\n999.\t!!Just do the thing already!! \
-#"
-
-
-def menu_list(menu):
-    menu_collect = []
-#    
-    split_input = menu.split("\t")
-    
-    for m_items in range(len(split_input)):
-        indexer = split_input[m_items]
-        indexer = indexer.splitlines()
-#        
-        menu_collect.append(indexer)
-    
-    for list_cont in range(len(menu_collect)):
-        print(f"content is {menu_collect[list_cont]}")
-    
-#    print(menu)
-#    print(split_input)    
-#    print(menu_collect)
-
-
-#title:
-#title:
-#title:
-#title:
-#title:
-#title:
-
-
-
+from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists, getIndexNumberPref #, get_processor_architecture
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien
 
 def set_temp_dir() -> str:
     """ 
@@ -62,7 +23,7 @@ def set_temp_dir() -> str:
     defpath = os.getenv('USERPROFILE') + """\documents\\tiny11"""
             
     print(f"Please enter path for a temp directory.\
-    \nDefault: press enter to use ({os.getenv('USERPROFILE')}\documents\\tiny11) \
+    \nDefault: press enter to use '{defpath}' \
     \nNote: Assume at least ~20GB of drive space will be required (for ISOs etc) (ctrl+c to get quit script)")
     setworkpath = input("Enter a path (no quotes): ").strip().lower() # does adding .strip at the end work? Dare I to dream?
     #setworkpath = setworkpath.strip()
@@ -130,6 +91,15 @@ def SetWindowsSourcePath() -> str:
 
 
 def checkWIMorESDFileExists(WinInstallSourceRoot: str) -> str:
+    """
+    Takes in string as path and returns path string
+    
+    Takes in a path to a root of the an install source and 
+    combines it with the location of either a WIM or ESD
+    It checks if that ESD or WIM exists and returns either that path
+    or an empty string.    
+    """
+    
     WImfillPath = """\\sources\\install.wim"""
     ESDfillPath = """\\sources\\install.esd"""
     
@@ -152,39 +122,16 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str) -> str:
         return ""
         
         
-def action_save_settings():
-    print("menu for saving settings to json etc coming soon. For now place holder")
-#\n 5.\tSet windows source path \
-    
-    
-def action_placeholder():
-    print("Eventually this will do something. For now place holder")
-    
-    
-def MainMenu():
-    
-    while True:
-        print("Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:")
-    
-        for item in menu_items:
-            print(item["title"])
-            
-        userReply = input("Choose an option: ").strip().lower()
-        
-        try:
-            user_choice = int(userReply)
-            
-            action = next((item["action"] for item in menu_items if int(item["title"].split('.')[0]) == user_choice), None)
-            
-            if action:
-                action()
-            else:
-                print("Invalid choice, please try again.")
-                
-        except ValueError:
-                print("Invalid choice, please try again.")
 
-def converIndexList(index_input) -> list:
+def converIndexList(index_input: str) -> list:
+    """Take in wim info output and return only the needed portion of it
+
+    Args:
+        index_input (str): output of the dism /wiminfo command fully formatted as a string
+
+    Returns:
+        list: After twice splitting the wim info, return the wim info as a list-of-lists
+    """
     
     list_collect = []
     
@@ -203,7 +150,18 @@ def converIndexList(index_input) -> list:
     return list_collect
 
 def processWimInfo():
-    dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
+    """Use the output of converIndexList() to present the information to the user and ask for an index number
+
+    Args:
+        None
+
+    Returns:
+        Return the user's index number to be used for the next step - either convertESDtoWIM() or (coming soon)
+    """
+
+
+    
+#    dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
 
     processInput = converIndexList(sample_input)
 
@@ -221,20 +179,31 @@ def processWimInfo():
             elif int(response) == userIn and userIn != 0:
                 response = userIn
     
-    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
-    print(dismWimIndexCMD)
+#    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}""".strip()
+#    print(dismWimIndexCMD)
 
     return response
 
 def convertESDtoWIM(ESDToConvertPath: str, WIMDestPath: str ):
+    """Take in path the input ESD and path to output WIM file. save WIM file at the end. This function only runs if an ESD is used.
+
+    Args:
+        These need work. Full path to ESD and WIM path. I think the wim path is only for the folder since the default file name of
+        install.wim is used (technically the only input is install.esd)
+
+    Returns:
+        None at the moment. this may change.
+    """
+    
+    
+    
     print(f"Your source folder has an install.esd file: Tiny 11 can only work with WIM files in order to \"Tiny it\". \nOn a Core i7 from 2019 this takes about 7 minutes")
     print(f"Source ESD file location: {ESDToConvertPath}\nInstall.wim file will be saved to: {WIMDestPath}")
     
     if ESDToConvertPath[-1] == "d":
 
         buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'{ESDToConvertPath}' /SourceIndex:3 /DestinationImageFile:'{WIMDestPath}\install.wim' /Compress:max /CheckIntegrity"""
-    
-#        print(f"\nNow running conversion line --> \n")
+
         try:
             print("Starting ESD to WIM conversion now...")
             result = subprocess.run(["powershell", "-Command", buildDISMFinal], capture_output=True, text=True, check=True)
@@ -247,17 +216,56 @@ def convertESDtoWIM(ESDToConvertPath: str, WIMDestPath: str ):
             print(f"PowerShell not found: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
-        
 
-#        os.system(buildDISMFinal)
+def processWimInfo():
+    #dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
 
+    #processInput = converIndexList(sample_input)
+    processInput = converIndexList(getIndexNumberPref())
 
+    for osIndexes in processInput:
+    #    print(f"OS {osIndexes[1]} is selection: {osIndexes[0]}  \t")
+        print(f"{osIndexes[0]}\t for OS {osIndexes[1]}")
+
+    print("0 to quit")
+    response = input("Enter OS choice: ").strip()
+    if response != "":
+#        if int(response) == 0:
+#            print("No OS entered")
+#            pass
+
+        for userIn in range(len(processInput)):
+            print(f"userin is value {userIn}")
+            if int(response) == 0:
+                print("Please enter a number for an OS")
+            elif int(response) == userIn and userIn != 0:
+                response = userIn
+    
+    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
+    print(dismWimIndexCMD)
+
+    return response
 
 
 if __name__ == "__main__":
-    convertESDtoWIM(checkWIMorESDFileExists("""P:\ISOs\Windows10-22h2"""), set_temp_dir() ) # f"""{ os.getenv('USERPROFILE')}\documents\\tiny11""")
+    def main():
+    #convertESDtoWIM(checkWIMorESDFileExists("""P:\ISOs\Windows10-22h2"""), set_temp_dir() ) # f"""{ os.getenv('USERPROFILE')}\documents\\tiny11""")
+    
+        print(f"Temp dir value is {set_temp_dir()}")
+
+        WinSrcRoot = SetWindowsSourcePath()
+
+        print(f"Windows source dir is {WinSrcRoot}")
+
+        checkWIMorESDFileExists(WinSrcRoot)
+
+        #pass
 
 
+main()
+
+#        print(f"\nNow running conversion line --> \n")
+#        os.system(buildDISMFinal)
     #destPath = f"{os.getenv('USERPROFILE')}\documents\\tiny11"
     #destPath = checkWIMorESDFileExists("P:\ISOs\Windows10-22h2")
         #buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'P:\ISOs\Windows10-22h2\sources\install.esd' /SourceIndex:3 /DestinationImageFile:'{destPath}\install.wim' /Compress:max /CheckIntegrity"""

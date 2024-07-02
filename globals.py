@@ -1,6 +1,19 @@
 srcPath = None
 tempDir = None
 
+ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
+
+
+menu_items = "0.\tQuit action" # 
+#\n1.\tSet Windows install source directory \
+#\n2.\tSet Temp eg `scratch` directory \
+#\n3.\tView/edit Settings \
+#\n4.\tCheck if ESD/Wim file exists  \
+#\n5.\tCheck if dism available action: is_dism_available \
+#\n999.\t!!Just do the thing already!! \
+#"
+
+
 sample_input = """Index : 1
 Name : Windows 11 Home
 Description : Windows 11 Home
