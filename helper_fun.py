@@ -1,6 +1,6 @@
 import os, subprocess
 #from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists #, get_processor_architecture
-from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
 
 
 def is_dism_available():
@@ -67,28 +67,34 @@ def checkIfPathExists(PathToCheck: str) -> bool:
 
 
 
-def getIndexNumberPref() -> str:
-#    ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
-#    LaptopSrcPath = """C:\\Users\\keith\\Documents\\tiny11\\Win11_23H2_x64v2-unmodified\\sources\\install.wim"""
+def getIndexNumberPref(ESDorWIMpath: str) -> str:
+    """Runs the DISM getwiminfo command against the path to the wim or ESD file and returns the PS window output
+    as a string.
 
-#    DISMgetInfo = f"""
-#& dism /English /Get-WimInfo /wimfile:'{ESDPathAlien}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'
-#"""
+    Args:
+        A path to the ESD or WIM file in the Windows source install folder (string).
 
-    DISMgetInfo = f"""& dism /English /Get-WimInfo /wimfile:'{ESDPathAlien}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'""" #.strip("\n")
+    Returns:
+        The re-formatted output of the DISM command as a string, such as below, no blank lines inbetween:
+            Index : 1
+            Name : Windows 11 Home
+            Description : Windows 11 Home
+            Size : 18,638,210,474 bytes
+            Index : 2
+            Name : Windows 11 Home N
+            Description : Windows 11 Home N
+            Size : 17,934,598,356 bytes
+    """
+    DISMgetInfo = f"""& dism /English /Get-WimInfo /wimfile:'{ESDorWIMpath}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'""" #.strip("\n")
 
-
-    #print(f"DISMGet info is \n{DISMgetInfo}")
-    #print("Attempting to get ESD/WIM info now...")
-    result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
-#    print("Info gathered successfully:")
-    #DISMOutput = result.stdout.strip("\n")
-#    print(f"Output return is \n{result.stdout}")
+#    result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
 
     try:    
         print("Attempting to get ESD/WIM info now...")
         result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
         print("Info gathered successfully:")
+        # in retrospect i could have used lstrip/rstrip if i just wanted to cut out newlines at the top/bottom
+        # but no blank lines at all is fine too
         DISMOutput = result.stdout.strip("\n")
 #        print(f"Output return is \n{result.stdout}")
         print(f"Output return is \n{DISMOutput}")
@@ -103,7 +109,52 @@ def getIndexNumberPref() -> str:
 #    else:
        # return DISMOutput
 
+def converIndexList(index_input: str) -> list:
+    """Take in wim info output - see getIndexNumberPref() - and return only the needed portion of it
 
+    Args:
+        index_input (str): output of the dism /wiminfo command fully formatted as a string - 
+        I've got it to the point this function works with the input in format such as
+        
+        Index : 1
+        Name : Windows 11 Home
+        Description : Windows 11 Home
+        Size : 18,638,210,474 bytes
+        Index : 2
+        Name : Windows 11 Home N
+        Description : Windows 11 Home N
+        Size : 17,934,598,356 bytes
+
+    Returns:
+        list: After twice splitting the wim info, return the wim info as a list-of-lists.
+        the return value will be returned in this format (with no line breaks) ready for the menu
+        to prompt the user
+        
+        [['1', 'Windows 11 Home'], ['2', 'Windows 11 Home N'], ['3', 'Windows 11 Home Single Language'], 
+        ['4', 'Windows 11 Education'], ['5', 'Windows 11 Education N'], ['6', 'Windows 11 Pro'], 
+        ['7', 'Windows 11 Pro N'], ['8', 'Windows 11 Pro Education'], ['9', 'Windows 11 Pro Education N'], 
+        ['10', 'Windows 11 Pro for Workstations'], ['11', 'Windows 11 Pro N for Workstations']]
+        
+        
+    """
+    
+    list_collect = []
+    
+    split_value = "Index : ".strip()
+    
+    split_input = index_input.split(split_value)
+    for indecies in range(len(split_input)):
+        indexer = split_input[indecies]
+        indexer = indexer.splitlines()
+        indexer = indexer[:-2]
+        
+#        print(f"value of indexer is {indexer}")
+        if indexer != []:
+            indexer[0] = indexer[0].lstrip()
+            indexer[1] = indexer[1].replace("Name : ", "")
+            list_collect.append(indexer)    
+            
+    return list_collect
 
 
 ###### for possible use in future maybe
@@ -111,3 +162,17 @@ def getIndexNumberPref() -> str:
 #    if is_dism_available():
 #        
 #        pass
+
+
+
+#    split_input = index_input.split("\n\n")
+#    for indecies in range(len(split_input)):
+#        indexer = split_input[indecies]
+#        indexer = indexer.splitlines()
+#        indexer = indexer[:-2]
+#        
+#        if len(indexer) == 2:
+#            indexer[0] = indexer[0].replace("Index :", "")
+#            indexer[1] = indexer[1].replace("Name", "")
+#
+#        list_collect.append(indexer)

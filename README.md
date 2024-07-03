@@ -3,25 +3,49 @@
 Scripts to build a trimmed-down Windows 11 image - now in...Python?
 
 Below I have something of a development log (in case you have a need to read boring stuff). 
+
 <p>
 
-This started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source.  Today I decided to save the fork repo for a PS edition fork and save this python edition to a separate repo. That went about as well as I expected (time consuming/difficult).
+This started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source.  Today I decided to save the fork repo for a PS edition fork and save this python edition to a separate repo. That went about as well as I expected (time consuming/difficulties with git).
 
 </p>
+
+<hr>
+
+<p>
+
+## 2 July update
+
+I realized today I'd been working on this for a month or so off-and-on, yet it feels like I've made 
+relatively little progress. I would estimate I am some were between 30% and 40% through the script. And 
+"complete" just means basic functionality duplication, not the planned improvements.
+
+I did come up with some goals for how I would like the script to look and work:
+
+* Overly commented/documented to make obvious what each function does. 
+* Be as considerate to user as possible in asking where various scratch directories and storage locations 
+are to located on the local system
+* Make the most time consuming of tasks as fast and optimized as possible (ESD conversion, ISO creation and 
+file copying being the most obvious examples). 
+* And - this may be a bit of a "stretch goal" - make the code relatively simple as possible so that a 
+person unfamiliar with Python (if not general programming) can modify details with relative ease.
+
+
+
+</p>
+
+<hr>
 
 <p>
 
 Just so there's no confusion here, I don't think this will ever replace the PS version of this script. And there's no reason to write this in Python given the advantages of using PS for the purpose. This is more of an exercise than anything else.
 
-Also, One of the main motivations for wanting to re-write this (besides Python practice) is the amount time it takes for the various tasks, such as generating the new ISO (I'm hoping I can improve on the time required). I am also working on much more communications with the user. 
+Also, one of the main motivations for wanting to re-write this (besides Python practice) is the amount time it takes for the various tasks, such as generating the new ISO (I'm hoping I can improve on the time required). I am also working on much more communications with the user. 
 
 I might actually come back and re-write it using actually PS too. Or you know re-write my Python script based on a PS script...in PS.
 
 </p>
 
-<p>
-I haven't dissected the PS script yet but I should be able to support Windows 10 and 11 and any architecture (though since I don't care about ARM that will be at the bottom of the priority list).
-</p>
 
 <p>
 One possible disadvantage of using this version is needing an install of Python (I wasn't planning to convert to exe).
@@ -29,7 +53,9 @@ One possible disadvantage of using this version is needing an install of Python 
 
 <p>
 
-I'm not sure yet if I'll utilize the same approach to creating a bootable ISO using oscdimg but I likely will not be able to get around using DISM. I will use the included unattend file at as a base for my own - I happen to have my own unattend files and want to skip a lot more things (like UELA agreement checkbox, keyboard language/layout and OS language).
+I'm not sure yet if I'll utilize the same approach to creating a bootable ISO using oscdimg but I likely will not be able to get around using DISM. I will use the included unattend file at as a base for my own - I happen to have my own unattend files and want to skip a lot more things (like UELA agreement checkbox, keyboard language/layout and OS language). 
+
+In fact it seems like a good to ask the user from the start if they'd like to create a fresh ISO at the end and only with a confirmation offer to attempted download oscdimg. And perhaps let the user specify a custom command (like using imgBurn).
 
 </p>
 
@@ -94,6 +120,8 @@ Features to be implemented:
 - Settings saved to JSON file?
 - Error handling?
 - I could offer to make Win 11 skip CPU etc checks. This might be too complicated. 
+- Asking the user if they'd like to create a bootable ISO at the end or not
+- An option to utlize a third party RAM disk utlity to hopefully speed up some processes like converting an ESD to a WIM file.
 
 <p>
 
@@ -301,5 +329,13 @@ I don't know if [the one I've been studying](https://github.com/ifnesi/1brc/blob
 I utlized ChatGPT to try and learn more about how it works and see if any of the techniques used could utilized for DISM commands and large file copy operations. I asked in a very generic way and got relatively generic answers but the short answer is *probably*.
 
 I'm getting a bit ahead of myself since I haven't even got the basic functionality down yet. But I have some information for when or if I want to do try and implement some of those ideas.
+
+### 2 July 2024
+
+Today I worked on my main() function and moving a lot of functions from the "theoretical" phase to the "make sure the function does what it's supposed to" phase. I'm not sure what percentage done with it I am but I just solved a piece I was having a lot of trouble with so the next few phases will probably come in relatively quickly. 
+
+Namely bringing in, parsing, slicing and re-formatting the output from the DISM wim info command to present as a menu for the user to chose an OS.
+
+Along with running each of the functions in turn and using the return value for the next function. I still have to determine if there's an install.esd or an install.wim and do something with that information. Namely if an esd is detected convert it to wim and continue and if it's a wim just continue. Once that's done I can move on the file copy operations.
 
 </p>

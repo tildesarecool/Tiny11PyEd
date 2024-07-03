@@ -1,7 +1,13 @@
+import os
+
 srcPath = None
 tempDir = None
 
 ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
+
+
+defaultTinyPath: str = os.getenv('USERPROFILE') + """\documents\\tiny11""" 
+
 
 
 menu_items = "0.\tQuit action" # 

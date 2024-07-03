@@ -7,8 +7,8 @@
 #  Probably implement this last or later at least
 # 
 import os, subprocess
-from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists, getIndexNumberPref #, get_processor_architecture
-from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien
+from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, getIndexNumberPref #, get_processor_architecture
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
 
 def set_temp_dir() -> str:
     """ 
@@ -20,26 +20,25 @@ def set_temp_dir() -> str:
     It could still use some work but it's close enough for now.
      """
         
-    defpath = os.getenv('USERPROFILE') + """\documents\\tiny11"""
             
     print(f"Please enter path for a temp directory.\
-    \nDefault: press enter to use '{defpath}' \
+    \nDefault: press enter to use '{defaultTinyPath}' \
     \nNote: Assume at least ~20GB of drive space will be required (for ISOs etc) (ctrl+c to get quit script)")
     setworkpath = input("Enter a path (no quotes): ").strip().lower() # does adding .strip at the end work? Dare I to dream?
     #setworkpath = setworkpath.strip()
 
     if setworkpath == "":
-        print(f"Working directory set to default location of {defpath}")
-#        defpath = os.getenv('USERPROFILE') + "\documents\\tiny11"
-        if checkIfPathExists(defpath): #os.path.exists(defpath):       
-            print(f"\nThe default path of {defpath} is being used.")
-            return defpath 
+        print(f"Working directory set to default location of {defaultTinyPath}")
+#        defaultTinyPath = os.getenv('USERPROFILE') + "\documents\\tiny11"
+        if checkIfPathExists(defaultTinyPath): #os.path.exists(defaultTinyPath):       
+            print(f"\nThe default path of {defaultTinyPath} is being used.")
+            return defaultTinyPath 
             
         else:
-            print(f"Default path {defpath} not found, creating directory.")
-            if CheckOnMkDir(setworkpath): #os.makedirs(defpath):
-                print(f"Path {defpath} created. Path set.")
-                return defpath
+            print(f"Default path {defaultTinyPath} not found, creating directory.")
+            if CheckOnMkDir(setworkpath): #os.makedirs(defaultTinyPath):
+                print(f"Path {defaultTinyPath} created. Path set.")
+                return defaultTinyPath
             else:
                 set_temp_dir()
 
@@ -106,8 +105,8 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str) -> str:
     WimPath = WinInstallSourceRoot + WImfillPath
     ESDPath = WinInstallSourceRoot + ESDfillPath
 
-    print(f"Value of wimpath is {WimPath}")
-    print(f"Value of esdpath is {ESDPath}")
+#    print(f"Value of wimpath is {WimPath}")
+#    print(f"Value of esdpath is {ESDPath}")
     
     
     
@@ -123,31 +122,6 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str) -> str:
         
         
 
-def converIndexList(index_input: str) -> list:
-    """Take in wim info output and return only the needed portion of it
-
-    Args:
-        index_input (str): output of the dism /wiminfo command fully formatted as a string
-
-    Returns:
-        list: After twice splitting the wim info, return the wim info as a list-of-lists
-    """
-    
-    list_collect = []
-    
-    split_input = index_input.split("\n\n")
-    for indecies in range(len(split_input)):
-        indexer = split_input[indecies]
-        indexer = indexer.splitlines()
-        indexer = indexer[:-2]
-        
-        if len(indexer) == 2:
-            indexer[0] = indexer[0].replace("Index :", "")
-            indexer[1] = indexer[1].replace("Name", "")
-
-        list_collect.append(indexer)
-            
-    return list_collect
 
 def processWimInfo():
     """Use the output of converIndexList() to present the information to the user and ask for an index number
@@ -217,15 +191,16 @@ def convertESDtoWIM(ESDToConvertPath: str, WIMDestPath: str ):
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
 
-def processWimInfo():
+def processWimInfo(WIMInfoList: str) -> int:
     #dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
 
     #processInput = converIndexList(sample_input)
-    processInput = converIndexList(getIndexNumberPref())
+    #processInput = converIndexList(getIndexNumberPref())
 
-    for osIndexes in processInput:
+    for osIndexes in WIMInfoList:
     #    print(f"OS {osIndexes[1]} is selection: {osIndexes[0]}  \t")
-        print(f"{osIndexes[0]}\t for OS {osIndexes[1]}")
+    # the default for \t is 8 spaces and apparently you can change this to another value. so 4.
+        print(f"{osIndexes[0]}\tfor {osIndexes[1]}".expandtabs(4))
 
     print("0 to quit")
     response = input("Enter OS choice: ").strip()
@@ -234,15 +209,15 @@ def processWimInfo():
 #            print("No OS entered")
 #            pass
 
-        for userIn in range(len(processInput)):
-            print(f"userin is value {userIn}")
+        for userIn in range(len(WIMInfoList)):
+            #print(f"userin is value {userIn}")
             if int(response) == 0:
                 print("Please enter a number for an OS")
             elif int(response) == userIn and userIn != 0:
                 response = userIn
     
-    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
-    print(dismWimIndexCMD)
+#    dismWimIndexCMD = f"""DISM /Export-Image /SourceImageFile: {response}  """.strip()
+    #print(dismWimIndexCMD)
 
     return response
 
@@ -250,14 +225,30 @@ def processWimInfo():
 if __name__ == "__main__":
     def main():
     #convertESDtoWIM(checkWIMorESDFileExists("""P:\ISOs\Windows10-22h2"""), set_temp_dir() ) # f"""{ os.getenv('USERPROFILE')}\documents\\tiny11""")
+
+        print(f"value returned by is dism available is --{is_dism_available()}--")        
+        
+        if is_dism_available():
+            WinSrcRoot = SetWindowsSourcePath()            
+            #print(f"Windows source dir is {WinSrcRoot}")
+            WIMPath = checkWIMorESDFileExists(WinSrcRoot)
+            #print(f"wimpath value is {WIMPath}")
+            WIMInfoGet = getIndexNumberPref(WIMPath)
+
+############### converIndexList is not working right
+            WimInfoAsList = converIndexList(WIMInfoGet)
+            print(f"wiminfo as list is {WimInfoAsList}")
+            UserOSPref = processWimInfo(WimInfoAsList)
+            print(f"After processing WIM info user os pref value is {UserOSPref}")
+###############
     
-        print(f"Temp dir value is {set_temp_dir()}")
-
-        WinSrcRoot = SetWindowsSourcePath()
-
-        print(f"Windows source dir is {WinSrcRoot}")
-
-        checkWIMorESDFileExists(WinSrcRoot)
+#        print(f"Temp dir value is {set_temp_dir()}")
+#
+#        WinSrcRoot = SetWindowsSourcePath()
+#
+#        print(f"Windows source dir is {WinSrcRoot}")
+#
+#        checkWIMorESDFileExists(WinSrcRoot)
 
         #pass
 
