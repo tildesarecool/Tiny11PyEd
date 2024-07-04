@@ -85,7 +85,7 @@ def getIndexNumberPref(ESDorWIMpath: str) -> str:
             Description : Windows 11 Home N
             Size : 17,934,598,356 bytes
     """
-    DISMgetInfo = f"""& dism /English /Get-WimInfo /wimfile:'{ESDorWIMpath}'   | Select-String -Pattern 'Index :|Name :|Description :|Size :'""" #.strip("\n")
+    DISMgetInfo = f"""& dism /English /Get-WimInfo /wimfile:'{ESDorWIMpath}' | Select-String -Pattern 'Index :|Name :|Description :|Size :'""" #.strip("\n")
 
 #    result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
 
@@ -93,6 +93,9 @@ def getIndexNumberPref(ESDorWIMpath: str) -> str:
         print("Attempting to get ESD/WIM info now...")
         result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
         print("Info gathered successfully:")
+        # for later reference when researching another project i came across this line, which is what i need to utlize
+        # just the endswith part, the email files is not really relevant 
+        # email_files = [os.path.join(download_folder, f) for f in os.listdir(download_folder) if f.endswith('.eml')]
         # in retrospect i could have used lstrip/rstrip if i just wanted to cut out newlines at the top/bottom
         # but no blank lines at all is fine too
         DISMOutput = result.stdout.strip("\n")

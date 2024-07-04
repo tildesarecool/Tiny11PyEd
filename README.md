@@ -338,4 +338,9 @@ Namely bringing in, parsing, slicing and re-formatting the output from the DISM 
 
 Along with running each of the functions in turn and using the return value for the next function. I still have to determine if there's an install.esd or an install.wim and do something with that information. Namely if an esd is detected convert it to wim and continue and if it's a wim just continue. Once that's done I can move on the file copy operations.
 
+### 4 July 2024
+
+
+
+
 </p>
