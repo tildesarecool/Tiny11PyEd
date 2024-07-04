@@ -7,7 +7,7 @@
 #  Probably implement this last or later at least
 # 
 import os, subprocess
-from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, getIndexNumberPref #, get_processor_architecture
+from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted #, get_processor_architecture
 from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
 
 def set_temp_dir() -> str:
@@ -17,7 +17,7 @@ def set_temp_dir() -> str:
     b) let user specify a path to be used as a working directory
     c) --return false where necessary--> no return bools
     d) do appropriate exist checks on paths where required
-    It could still use some work but it's close enough for now.
+    It could still use some work but it's close enough for now.GetWIMinfoReturnFormatted
      """
         
             
@@ -65,6 +65,16 @@ def set_temp_dir() -> str:
 
 
 def SetWindowsSourcePath() -> str:
+    """Ask user for the source of the windows install. This can be a mounted ISO like D: 
+    or the full path to an existing install source. During the file copy this will what it's 
+    copying from. Or the "source". Does a check to see if the path exists and runs strips spaces.
+
+    Returns:
+        str: This returns a sanitized string of the path the user specified (after it's checked if it exists).
+    """
+    
+    
+    
     print("Please specifiy a path for the root of a Windows 11 installations source. \
 \nThis can be a mounted ISO, a physical CD/DVD drive with an install disk, \
 \nor a directory (extracted from an ISO for instance). The 'root' will have a 'sources' subfolder \
@@ -74,7 +84,7 @@ def SetWindowsSourcePath() -> str:
 \nNote: Do not include any quotes around the path \
 \n(You can try a UNC but I don't think it would work and would be really slow anyway)")
 
-    winSourcePath = input("\nEnter path to Windows install drive (or directory): ").strip().lower()
+    winSourcePath = input("\nEnter path to Windows install drive (or directory): ").lower().lstrip().rstrip()
 #    This srcpath is true thing is worst way to do this. But I don't feel like making it more
 #   elegant at the moment so it'll have to do.
 
@@ -195,7 +205,7 @@ def processWimInfo(WIMInfoList: str) -> int:
     #dismWimIndexCMD = """& 'DISM' /Export-Image /SourceImageFile:"$DriveLetter\sources\install.esd" /SourceIndex:$index /DestinationImageFile:"$ScratchDisk\tiny11\sources\install.wim" /Compress:max /CheckIntegrity"""
 
     #processInput = converIndexList(sample_input)
-    #processInput = converIndexList(getIndexNumberPref())
+    #processInput = converIndexList(GetWIMinfoReturnFormatted())
 
     for osIndexes in WIMInfoList:
     #    print(f"OS {osIndexes[1]} is selection: {osIndexes[0]}  \t")
@@ -226,14 +236,14 @@ if __name__ == "__main__":
     def main():
     #convertESDtoWIM(checkWIMorESDFileExists("""P:\ISOs\Windows10-22h2"""), set_temp_dir() ) # f"""{ os.getenv('USERPROFILE')}\documents\\tiny11""")
 
-        print(f"value returned by is dism available is --{is_dism_available()}--")        
+        #print(f"value returned by is dism available is --{is_dism_available()}--")        
         
         if is_dism_available():
             WinSrcRoot = SetWindowsSourcePath()            
             #print(f"Windows source dir is {WinSrcRoot}")
             WIMPath = checkWIMorESDFileExists(WinSrcRoot)
             #print(f"wimpath value is {WIMPath}")
-            WIMInfoGet = getIndexNumberPref(WIMPath)
+            WIMInfoGet = GetWIMinfoReturnFormatted(WIMPath)
 
 ############### converIndexList is not working right
             WimInfoAsList = converIndexList(WIMInfoGet)

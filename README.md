@@ -340,7 +340,7 @@ Along with running each of the functions in turn and using the return value for 
 
 ### 4 July 2024
 
-
+I did some further research today on some ideas for *really* fast file copying. And updated/created some comments with descriptions of functions.
 
 
 </p>

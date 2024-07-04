@@ -5,14 +5,28 @@ from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, de
 
 def is_dism_available():
     """
-    Return bool for whether DISM is available on system.
+    Return bool for whether DISM is available on system. This really only needs to be called once. 
+    And actually it could the single test that decides if the main() function is even called. Because
+    the script doesn't work without DISM. 
     """
     # Use os.system to run 'dism /?' and check if it returns 0
-    foundDismOrNot = os.system('cmd /c dism /? >null') == 0
+    # I realized I could make this line return (os.system('cmd /c dism /? >null') == 0)
+    # and i'll likely change it. Sorry to trigger anybody's OCD.
+    foundDismOrNot =  os.system('cmd /c dism /? >null') == 0
     return foundDismOrNot
 
 
 def checkUserInputYorN(userYNChoice: str) -> bool:
+    """Like CheckOnMkDir(), this was supposed to a generic/all purpose function but it seems to still have some 
+    left over lines tieing it directly to CheckOnMkDir(). This will have to be re-done in a refactor.
+
+    Args:
+        userYNChoice (str): y or n usually for yes or no questions. This needs to be re-written
+
+    Returns:
+        bool: Return True if user answers with y or a blank line. Return false in all other circumstances.
+    """
+    
     userYNChoice = input(f"Alternatively, would you like to create the directory? (Y/n default: Y) ").strip().lower()
     if userYNChoice == "y" or userYNChoice == "":
         return True
@@ -38,6 +52,16 @@ def get_processor_architecture():
 
 
 def CheckOnMkDir(DirToCreate: str) -> bool:
+    """Attempt to create specified folder at specified location. This is supposed to be a generic
+    re-usable function. I think I only use it once or twice. ATM it's probably not a big deal
+    if it's not all purpose/generic.
+
+    Args:
+        DirToCreate (str): Path to folder to create
+
+    Returns:
+        bool: True if folder created successfully, return false with error code all other cases.
+    """
     DirToCreate = DirToCreate.strip().lower()
     try: 
         os.makedirs(DirToCreate)
@@ -55,7 +79,7 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
 
 
 def checkIfPathExists(PathToCheck: str) -> bool:
-    """probably unncecessary abstraction to os.path.exists
+    """probably unncecessary abstraction to os.path.exists; sanitizes input if nothing else
     Possible ToDo: make sure this works if passed in path has spaces in it
     if that makes it not work come up with a way to deal with it
     """
@@ -67,8 +91,8 @@ def checkIfPathExists(PathToCheck: str) -> bool:
 
 
 
-def getIndexNumberPref(ESDorWIMpath: str) -> str:
-    """Runs the DISM getwiminfo command against the path to the wim or ESD file and returns the PS window output
+def GetWIMinfoReturnFormatted(ESDorWIMpath: str) -> str:
+    """Runs the DISM GetWIMinfoReturnFormatted command against the path to the wim or ESD file and returns the PS window output
     as a string.
 
     Args:
@@ -113,7 +137,7 @@ def getIndexNumberPref(ESDorWIMpath: str) -> str:
        # return DISMOutput
 
 def converIndexList(index_input: str) -> list:
-    """Take in wim info output - see getIndexNumberPref() - and return only the needed portion of it
+    """Take in wim info output - see GetWIMinfoReturnFormatted() - and return only the needed portion of it
 
     Args:
         index_input (str): output of the dism /wiminfo command fully formatted as a string - 
@@ -140,6 +164,7 @@ def converIndexList(index_input: str) -> list:
         
         
     """
+    
     
     list_collect = []
     
