@@ -249,7 +249,7 @@ if __name__ == "__main__":
 
         #print(f"value returned by is dism available is --{is_dism_available()}--")        
         
-        if is_dism_available() and defaultTinyPath:
+        if is_dism_available(): # and defaultTinyPath:
 #            WinSrcRoot = SetWindowsSourcePath()            
 #            
 #            #print(f"Windows source dir is {WinSrcRoot}")
@@ -265,6 +265,8 @@ if __name__ == "__main__":
             WorkDir = SetTinyWorkDir()
 
             print(f"Work dir value is {WorkDir}")
+        else:
+            print("Dism not found")
 #
 #        WinSrcRoot = SetWindowsSourcePath()
 #
