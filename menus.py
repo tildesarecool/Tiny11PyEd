@@ -1,6 +1,6 @@
 import os, subprocess
 from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, remove_quotes #, get_processor_architecture
-from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11
 
 
 def menu_list(menu):

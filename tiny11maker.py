@@ -8,7 +8,7 @@
 # 
 import os, subprocess
 from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, remove_quotes #, get_processor_architecture
-from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11
 
 def SetTinyWorkDir() -> str:
     """    This function is supposed to:

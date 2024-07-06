@@ -1,19 +1,23 @@
 import os, subprocess
 #from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists #, get_processor_architecture
-from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11
 
 
 def remove_quotes(path: str) -> str:
-    """simple utility function to remove any single ' or double " quotes the user might have included in the path
+    """simple utility function to remove any single ' or double " quotes the user might have included in the path. 
+    This version makes sure to remove only leading/trailing quotes, to avoid removing ' and/or " in file or folder names.
 
     Args:
-        path (str): Path to have quotes stripped out of 
+        path (str): Path to have quotes stripped out of (leading/trailing)
 
     Returns:
         str: string path with no quotes
     """
     
-    return path.strip('\'"')
+    
+    if (path.startswith('"') and path.endswith('"')) or (path.startswith("'") and path.endswith("'")):
+        return path[1:-1]
+    return path
 
 
 def is_dism_available():
@@ -87,7 +91,7 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
         return True
 
 
-
+#os.walk
 
 def checkIfPathExists(PathToCheck: str) -> bool:
     """probably unncecessary abstraction to os.path.exists; sanitizes input if nothing else

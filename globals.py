@@ -7,6 +7,10 @@ ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 
 
 defaultTinyPath: str = os.getenv('USERPROFILE') + """\documents\\tiny11""" 
+
+defaultTinyPathWin11: str = defaultTinyPath + """\win11"""
+
+
 # not sure i already thought of this: check if 
 # userprofile/documents/tiny11 already exists
 
