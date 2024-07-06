@@ -342,5 +342,18 @@ Along with running each of the functions in turn and using the return value for 
 
 I did some further research today on some ideas for *really* fast file copying. And updated/created some comments with descriptions of functions.
 
+### 5 July 2024
+
+I renamed my temp_dir function to SetTinyWorkDir so it's more descriptive. As well as further filling in the function descriptions and general documentation inside the script itself.
+
+I also started testing the SetTinyWorkDir() function and realized both it and my help function I use for creating a new folder were not working properly: it's supposed to either use a default folder location or let the user enter their own path then if the folder is not found offer to create it with a yes/new prompt which also a help function. The issue was it did threw an exception no matter what path was entered, even copy/pasting the default path. The folder creation would just fail. 
+
+I was going to skip fixing this for later until I realized I can't really continue development until this works.
+
+(later)
+
+I made SetTinyWorkDir() work again as well as the rest of functions I have written over the past month. Actually I made a new utility function that just strips quotes out of paths entered in by users. So that's now useful.
+
+Okay all but one function that's already written is now in the main function ready to be called for testing purposes.
 
 </p>

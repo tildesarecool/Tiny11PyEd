@@ -7,25 +7,36 @@
 #  Probably implement this last or later at least
 # 
 import os, subprocess
-from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted #, get_processor_architecture
+from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, remove_quotes #, get_processor_architecture
 from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
 
-def set_temp_dir() -> str:
-    """ 
-    This function is supposed to:
+def SetTinyWorkDir() -> str:
+    """    This function is supposed to:
+    
     a) use a default working directory path if none is specified (and create folder as necessary)
+    
     b) let user specify a path to be used as a working directory
-    c) --return false where necessary--> no return bools
-    d) do appropriate exist checks on paths where required
+    
+    c) continue running this function until a valid path is reached. Should probably use an infinite
+    loop rather than recursion. Something for later maybe.
+    
+    d) do appropriate exist checks on paths where required and sanitize input for easy return
+    
     It could still use some work but it's close enough for now.GetWIMinfoReturnFormatted
-     """
+
+    Returns:
+        str: Once the directory path has been set return that path as a string (presumably sanitized and validated).
+    """
+    
+    
+    
         
             
     print(f"Please enter path for a temp directory.\
     \nDefault: press enter to use '{defaultTinyPath}' \
     \nNote: Assume at least ~20GB of drive space will be required (for ISOs etc) (ctrl+c to get quit script)")
-    setworkpath = input("Enter a path (no quotes): ").strip().lower() # does adding .strip at the end work? Dare I to dream?
-    #setworkpath = setworkpath.strip()
+    setworkpath = input("Enter a path (no quotes): ") # does adding .strip at the end work? Dare I to dream?
+    setworkpath = remove_quotes(setworkpath).strip().lower()
 
     if setworkpath == "":
         print(f"Working directory set to default location of {defaultTinyPath}")
@@ -40,7 +51,7 @@ def set_temp_dir() -> str:
                 print(f"Path {defaultTinyPath} created. Path set.")
                 return defaultTinyPath
             else:
-                set_temp_dir()
+                SetTinyWorkDir()
 
     elif setworkpath != "":
         if checkIfPathExists(setworkpath): # os.path.exists(setworkpath):
@@ -54,14 +65,14 @@ def set_temp_dir() -> str:
 \n- on Win 11 you may have to `see more options` \
 \n") 
             #YNCreateDir = input(f"Alternatively, would you like to create directory {setworkpath}? (Y/N) ").strip().lower()
-            if checkUserInputYorN("y"): #YNCreateDir == "y":
+            if checkUserInputYorN("y", "Alternatively, would you like to create the directory? (Y/n default: Y)"): #YNCreateDir == "y":
                 if CheckOnMkDir(setworkpath):
                     print(f"Path '{setworkpath}' successfully created  ")
                     return setworkpath
                 else:
-                    set_temp_dir()
+                    SetTinyWorkDir()
             else:
-                set_temp_dir()
+                SetTinyWorkDir()
 
 
 def SetWindowsSourcePath() -> str:
@@ -234,25 +245,26 @@ def processWimInfo(WIMInfoList: str) -> int:
 
 if __name__ == "__main__":
     def main():
-    #convertESDtoWIM(checkWIMorESDFileExists("""P:\ISOs\Windows10-22h2"""), set_temp_dir() ) # f"""{ os.getenv('USERPROFILE')}\documents\\tiny11""")
+    #convertESDtoWIM(checkWIMorESDFileExists("""P:\ISOs\Windows10-22h2"""), SetTinyWorkDir() ) # f"""{ os.getenv('USERPROFILE')}\documents\\tiny11""")
 
         #print(f"value returned by is dism available is --{is_dism_available()}--")        
         
-        if is_dism_available():
-            WinSrcRoot = SetWindowsSourcePath()            
-            #print(f"Windows source dir is {WinSrcRoot}")
-            WIMPath = checkWIMorESDFileExists(WinSrcRoot)
-            #print(f"wimpath value is {WIMPath}")
-            WIMInfoGet = GetWIMinfoReturnFormatted(WIMPath)
+        if is_dism_available() and defaultTinyPath:
+#            WinSrcRoot = SetWindowsSourcePath()            
+#            
+#            #print(f"Windows source dir is {WinSrcRoot}")
+#            WIMPath = checkWIMorESDFileExists(WinSrcRoot)
+#            #print(f"wimpath value is {WIMPath}")
+#            WIMInfoGet = GetWIMinfoReturnFormatted(WIMPath)
+#
+#            WimInfoAsList = converIndexList(WIMInfoGet)
+#            #print(f"wiminfo as list is {WimInfoAsList}")
+#            UserOSPref = processWimInfo(WimInfoAsList)
+#            print(f"After processing WIM info user os pref value is {UserOSPref}")
 
-############### converIndexList is not working right
-            WimInfoAsList = converIndexList(WIMInfoGet)
-            print(f"wiminfo as list is {WimInfoAsList}")
-            UserOSPref = processWimInfo(WimInfoAsList)
-            print(f"After processing WIM info user os pref value is {UserOSPref}")
-###############
-    
-#        print(f"Temp dir value is {set_temp_dir()}")
+            WorkDir = SetTinyWorkDir()
+
+            print(f"Work dir value is {WorkDir}")
 #
 #        WinSrcRoot = SetWindowsSourcePath()
 #
@@ -291,7 +303,7 @@ main()
 
 
 #    cpu_arch = get_processor_architecture()
-#    set_temp_dir()
+#    SetTinyWorkDir()
     
 #    SetWindowsSourcePath()
     #checkWIMorESDFileExists("P:\ISOs\Win 11\Win11_23H2_English_x64v2")
@@ -308,7 +320,7 @@ main()
 ##    {"title": "Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:" , "action": action_placeholder },
 #    {"title": "\n 0.\tQuit " , "action": exit},
 #    {"title": " 1.\tSet Windows install source directory", "action": SetWindowsSourcePath},
-#    {"title": " 2.\tSet Temp eg `scratch` directory ", "action": set_temp_dir },
+#    {"title": " 2.\tSet Temp eg `scratch` directory ", "action": SetTinyWorkDir },
 #    {"title": " 3.\tView/edit Settings " , "action": action_save_settings},
 #    {"title": " 4.\tCheck if ESD/Wim file exists " , "action": checkIfPathExists },
 #    {"title": " 5.\tCheck if dism available " , "action": is_dism_available},
@@ -352,7 +364,7 @@ main()
 #
 #        MainMenu()
 #    elif int(userReply) == 2:
-#        tempDir = set_temp_dir()
+#        tempDir = SetTinyWorkDir()
 #        MainMenu()
 #    elif int(userReply) == 3:
 #        print("menu for saving settings to json etc coming soon. For now place holder")
@@ -396,3 +408,6 @@ main()
 # MenuItemNineNine
 
 #"title": "Welcome to Tiny11 - Python Edition\n\n\n Please choose from the folowing options:" , "action": action_placeholder 
+
+
+

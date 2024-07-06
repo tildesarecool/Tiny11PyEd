@@ -3,52 +3,53 @@ import os, subprocess
 from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath
 
 
+def remove_quotes(path: str) -> str:
+    """simple utility function to remove any single ' or double " quotes the user might have included in the path
+
+    Args:
+        path (str): Path to have quotes stripped out of 
+
+    Returns:
+        str: string path with no quotes
+    """
+    
+    return path.strip('\'"')
+
+
 def is_dism_available():
     """
     Return bool for whether DISM is available on system. This really only needs to be called once. 
-    And actually it could the single test that decides if the main() function is even called. Because
+    And actually it could be the single test that decides if the main() function is even called. Because
     the script doesn't work without DISM. 
     """
     # Use os.system to run 'dism /?' and check if it returns 0
-    # I realized I could make this line return (os.system('cmd /c dism /? >null') == 0)
+    # I realized I could make this line 
+    # return (os.system('cmd /c dism /? >null') == 0)
     # and i'll likely change it. Sorry to trigger anybody's OCD.
-    foundDismOrNot =  os.system('cmd /c dism /? >null') == 0
+    foundDismOrNot = os.system('cmd /c dism /? >null') == 0
     return foundDismOrNot
 
 
-def checkUserInputYorN(userYNChoice: str) -> bool:
+def checkUserInputYorN(userYNChoice: str, userInputPrompt: str) -> bool:
     """Like CheckOnMkDir(), this was supposed to a generic/all purpose function but it seems to still have some 
     left over lines tieing it directly to CheckOnMkDir(). This will have to be re-done in a refactor.
 
     Args:
         userYNChoice (str): y or n usually for yes or no questions. This needs to be re-written
+        userInputPrompt (str): the prompt to the user asking for for Y or N 
 
     Returns:
         bool: Return True if user answers with y or a blank line. Return false in all other circumstances.
     """
     
-    userYNChoice = input(f"Alternatively, would you like to create the directory? (Y/n default: Y) ").strip().lower()
+#    userYNChoice = input(f"Alternatively, would you like to create the directory? (Y/n default: Y) ").strip().lower()
+    if userInputPrompt != "":
+        userYNChoice = input(f"{userInputPrompt.strip()} ").strip().lower()
+    
     if userYNChoice == "y" or userYNChoice == "":
         return True
     else:
         return False
-
-
-
-def get_processor_architecture():
-    """ 
-    I'm actually not sure what this arch identification is going to be used for. 
-    ---> In the original PS script this is used in a path later on involving looking for 
-    oscdimg.exe file in the ADK installation folder. Not a very high priority, in other words.
-    """
-    # processor_architecture = os.getenv('PROCESSOR_ARCHITECTURE')
-    if os.getenv('PROCESSOR_ARCHITECTURE'):
-        #print("processor arch found")
-        return os.getenv('PROCESSOR_ARCHITECTURE')
-    else:
-        print("no value for processor arch found")
-        return False
-
 
 
 def CheckOnMkDir(DirToCreate: str) -> bool:
@@ -62,18 +63,28 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
     Returns:
         bool: True if folder created successfully, return false with error code all other cases.
     """
-    DirToCreate = DirToCreate.strip().lower()
-    try: 
-        os.makedirs(DirToCreate)
-        return True
-        #print(f"Successfully created path {setworkpath}")
-    except OSError as e:
-        #return str(e)
-        
-        print(f"Attempt to create path {DirToCreate} resulted in an error, please try again. \
+    #DirToCreate = DirToCreate
+    DirToCreate = remove_quotes(DirToCreate).strip().lower()
+    
+    # if the passed in path does NOT exist
+    if not checkIfPathExists(DirToCreate):
+    
+        try: 
+            # attempt to make passed in path/new folder and return true upon success
+            print(f"value of dirtocreate is {DirToCreate}")
+            os.makedirs(DirToCreate)
+            return True
+        # if the attempt to create the folder fails, throw an exception and print the error
+        except OSError as e:
+            #return str(e)
+
+            print(f"Attempt to create path {DirToCreate} resulted in an error, please try again. \
 \n\nError message for reference: \n\n{e}.\n")
-        
+        # then return false
         return False
+    else:
+        # if the path already exists, return true
+        return True
 
 
 
@@ -83,8 +94,9 @@ def checkIfPathExists(PathToCheck: str) -> bool:
     Possible ToDo: make sure this works if passed in path has spaces in it
     if that makes it not work come up with a way to deal with it
     """
+    
     PathToCheck = PathToCheck.strip().lower()
-    if os.path.exists(PathToCheck):
+    if os.path.exists(PathToCheck) and os.path.isdir(PathToCheck):
         return True
     else:
         return False
@@ -99,7 +111,7 @@ def GetWIMinfoReturnFormatted(ESDorWIMpath: str) -> str:
         A path to the ESD or WIM file in the Windows source install folder (string).
 
     Returns:
-        The re-formatted output of the DISM command as a string, such as below, no blank lines inbetween:
+        The re-formatted output of the DISM command as a string, such as below, no blank lines in between:
             Index : 1
             Name : Windows 11 Home
             Description : Windows 11 Home
@@ -124,7 +136,7 @@ def GetWIMinfoReturnFormatted(ESDorWIMpath: str) -> str:
         # but no blank lines at all is fine too
         DISMOutput = result.stdout.strip("\n")
 #        print(f"Output return is \n{result.stdout}")
-        print(f"Output return is \n{DISMOutput}")
+        #print(f"Output return is \n{DISMOutput}")
         return DISMOutput
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code: {e.returncode}")
@@ -204,3 +216,19 @@ def converIndexList(index_input: str) -> list:
 #            indexer[1] = indexer[1].replace("Name", "")
 #
 #        list_collect.append(indexer)
+
+
+
+def get_processor_architecture():
+    """ 
+    I'm actually not sure what this arch identification is going to be used for. 
+    ---> In the original PS script this is used in a path later on involving looking for 
+    oscdimg.exe file in the ADK installation folder. Not a very high priority, in other words.
+    """
+    # processor_architecture = os.getenv('PROCESSOR_ARCHITECTURE')
+    if os.getenv('PROCESSOR_ARCHITECTURE'):
+        #print("processor arch found")
+        return os.getenv('PROCESSOR_ARCHITECTURE')
+    else:
+        print("no value for processor arch found")
+        return False
