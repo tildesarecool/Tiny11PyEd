@@ -112,7 +112,8 @@ def SetWindowsSourcePath() -> str:
 
 def checkWIMorESDFileExists(WinInstallSourceRoot: str) -> str:
     """
-    Takes in string as path and returns path string
+    Takes in string as path and returns path string directly from the SetWindowsSourcePath() function,
+    so the string should already be verified/stripped/sanitized (hopefully)
     
     Takes in a path to a root of the an install source and 
     combines it with the location of either a WIM or ESD
@@ -129,16 +130,22 @@ def checkWIMorESDFileExists(WinInstallSourceRoot: str) -> str:
 #    print(f"Value of wimpath is {WimPath}")
 #    print(f"Value of esdpath is {ESDPath}")
     
+    #os.path.exists(PathToCheck)
+
+    # i was using the checkIfPathExists() function to check this but I changed that to only check for directories at some point
+    # so my current solution for check if the wim/esd files are present is to just use the os.path.exists() method directly,
+    # at least for now. i'm probably making too big a deal out of this.
     
-    
-    if checkIfPathExists(WimPath):
+    if os.path.exists(WimPath):
         print(f"WIM file {WimPath} found")
         return WimPath
-    elif checkIfPathExists(ESDPath):
+    elif os.path.exists(ESDPath):
         print(f"ESD file {ESDPath} found")
         return ESDPath
     else:
         print(f"No WIM or ESD file found at specified location")
+        print(f"wimpath is {WimPath}")
+        print(f"esdpath is {ESDPath}")
         return ""
         
         
@@ -250,23 +257,23 @@ if __name__ == "__main__":
         #print(f"value returned by is dism available is --{is_dism_available()}--")        
         
         if is_dism_available(): # and defaultTinyPath:
-#            WinSrcRoot = SetWindowsSourcePath()            
-#            
-#            #print(f"Windows source dir is {WinSrcRoot}")
-#            WIMPath = checkWIMorESDFileExists(WinSrcRoot)
-#            #print(f"wimpath value is {WIMPath}")
+            WinSrcRoot = SetWindowsSourcePath()            
+##            
+##            #print(f"Windows source dir is {WinSrcRoot}")
+            WIMPath = checkWIMorESDFileExists(WinSrcRoot)
+##            #print(f"wimpath value is {WIMPath}")
 #            WIMInfoGet = GetWIMinfoReturnFormatted(WIMPath)
-#
+##
 #            WimInfoAsList = converIndexList(WIMInfoGet)
-#            #print(f"wiminfo as list is {WimInfoAsList}")
+##            #print(f"wiminfo as list is {WimInfoAsList}")
 #            UserOSPref = processWimInfo(WimInfoAsList)
-#            print(f"After processing WIM info user os pref value is {UserOSPref}")
-
-            WorkDir = SetTinyWorkDir()
-
-            print(f"Work dir value is {WorkDir}")
+##            print(f"After processing WIM info user os pref value is {UserOSPref}")
+#
+#            WorkDir = SetTinyWorkDir()
+#
+#            print(f"Work dir value is {WorkDir}")
         else:
-            print("Dism not found")
+            print("Dism not found or escalation privileges needed to run. Please run as local admin.")
 #
 #        WinSrcRoot = SetWindowsSourcePath()
 #

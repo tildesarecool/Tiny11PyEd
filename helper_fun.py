@@ -97,6 +97,11 @@ def checkIfPathExists(PathToCheck: str) -> bool:
     """probably unncecessary abstraction to os.path.exists; sanitizes input if nothing else
     Possible ToDo: make sure this works if passed in path has spaces in it
     if that makes it not work come up with a way to deal with it
+
+    There's at least one instance I use this function to check if a file exists - the esd/wim check exist function checkIfPathExists()
+    I changed this to also check if the passed in PathToCheck is a directory or not
+    so I need to either add a second parameter to specify checking on directory versus file or just use the one off check
+    in that checkIfPathExists() function.
     """
     
     PathToCheck = PathToCheck.strip().lower()

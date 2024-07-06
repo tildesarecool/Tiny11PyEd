@@ -2,6 +2,27 @@ import subprocess, os
 from globals import srcPath, tempDir, sample_input
 
 
+def is_dism_available():
+    """
+    Return bool for whether DISM is available on system. This really only needs to be called once. 
+    And actually it could be the single test that decides if the main() function is even called. Because
+    the script doesn't work without DISM. 
+    """
+    # Use os.system to run 'dism /?' and check if it returns 0
+    # I realized I could make this line 
+    # return (os.system('cmd /c dism /? >null') == 0)
+    # and i'll likely change it. Sorry to trigger anybody's OCD.
+    foundDismOrNot = os.system('cmd /c dism /? >null') == 0
+    #foundDismOrNot = os.system('cmd /c dism /? ') == 0
+    return foundDismOrNot
+
+
+#print(f"value of is_dism_available is {is_dism_available()}")
+
+
+
+
+
 #sample_input.s
 
 

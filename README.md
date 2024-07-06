@@ -356,4 +356,26 @@ I made SetTinyWorkDir() work again as well as the rest of functions I have writt
 
 Okay all but one function that's already written is now in the main function ready to be called for testing purposes.
 
+### 6 July 2024
+
+I had been wondering why the PS version of Tiny11 seemed to put so much emphasis on permissions and execution properties, and then I found this function continually failing. And it's kind of the linchpin of the whole script I had to figure out why it wasn't working: dism is not running because "Elevated permissions are required to run DISM.". So that answers that question then. Now I should probably go back and write in some permission checks. Or just make sure to run the script from an escalated permissions Windows Terminal/VSCode. One of those seems safer than the other. So I'll do what I like: wait until the last possible moment I have no choice *then* handle checking on escalated permissions to run DISM and the script in general. 
+
+```Python
+def is_dism_available():
+    """
+    Return bool for whether DISM is available on system. This really only needs to be called once. 
+    And actually it could be the single test that decides if the main() function is even called. Because
+    the script doesn't work without DISM. 
+    """
+    # Use os.system to run 'dism /?' and check if it returns 0
+    # I realized I could make this line 
+    # return (os.system('cmd /c dism /? >null') == 0)
+    # and i'll likely change it. Sorry to trigger anybody's OCD.
+    #foundDismOrNot = os.system('cmd /c dism /? >null') == 0
+    foundDismOrNot = os.system('cmd /c dism /? ') == 0
+    return foundDismOrNot
+    
+```
+
+
 </p>
