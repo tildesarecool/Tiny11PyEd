@@ -91,7 +91,7 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
         return True
 
 
-#os.walk
+#os.walk()
 
 def checkIfPathExists(PathToCheck: str) -> bool:
     """probably unncecessary abstraction to os.path.exists; sanitizes input if nothing else
