@@ -91,7 +91,7 @@ def SetWindowsSourcePath() -> str:
 \nor a directory (extracted from an ISO for instance). The 'root' will have a 'sources' subfolder \
 \nSample Paths: \
 \nD: \
-\nc:\ISOs\Windows11-24h1 \
+\nc:\\ISOs\\Windows11-24h1 \
 \nNote: Do not include any quotes around the path \
 \n(You can try a UNC but I don't think it would work and would be really slow anyway)")
 
@@ -197,7 +197,7 @@ def convertESDtoWIM(ESDToConvertPath: str, WIMDestPath: str ):
     
     if ESDToConvertPath[-1] == "d":
 
-        buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'{ESDToConvertPath}' /SourceIndex:3 /DestinationImageFile:'{WIMDestPath}\install.wim' /Compress:max /CheckIntegrity"""
+        buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'{ESDToConvertPath}' /SourceIndex:3 /DestinationImageFile:'{WIMDestPath}\\install.wim' /Compress:max /CheckIntegrity"""
 
         try:
             print("Starting ESD to WIM conversion now...")
