@@ -358,7 +358,11 @@ Okay all but one function that's already written is now in the main function rea
 
 ### 6 July 2024
 
-I had been wondering why the PS version of Tiny11 seemed to put so much emphasis on permissions and execution properties, and then I found this function continually failing. And it's kind of the linchpin of the whole script I had to figure out why it wasn't working: dism is not running because "Elevated permissions are required to run DISM.". So that answers that question then. Now I should probably go back and write in some permission checks. Or just make sure to run the script from an escalated permissions Windows Terminal/VSCode. One of those seems safer than the other. So I'll do what I like: wait until the last possible moment I have no choice *then* handle checking on escalated permissions to run DISM and the script in general. 
+I had been wondering why the PS version of Tiny11 seemed to put so much emphasis on permissions and execution properties, and then I found this function continually failing. And it's kind of the linchpin of the whole script I had to figure out why it wasn't working: dism is not running because "Elevated permissions are required to run DISM.". 
+
+
+So that answers that question then. Now I should probably go back and write in some permission checks. Or just make sure to run the script from an escalated permissions Windows Terminal/VSCode. One of those seems safer than the other. So I'll do what I like: wait until the last possible moment I have no choice *then* handle checking on escalated permissions to run DISM and the script in general. 
+
 
 ```Python
 def is_dism_available():
@@ -374,8 +378,15 @@ def is_dism_available():
     #foundDismOrNot = os.system('cmd /c dism /? >null') == 0
     foundDismOrNot = os.system('cmd /c dism /? ') == 0
     return foundDismOrNot
-    
 ```
 
+
+### 7 July 2024
+
+I am still doing a lot of debugging and re-organizing. I actually realized I had implemented the same function twice, including using the same name. Not sure how I missed that. And I only caught it when I noted that VSCode had made the font light up on an imported global variable. 
+
+I also created a really bad general purpose "flow chart" in MS Paint. Bad enough I am not putting it here in the readme but I didn't bother hiding it from the repo. It was just supposed to help me visualize getting the OS preference from the user and using that for first converting ESD to WIM then for mounting the wim or just straight to mounting the WIM.
+
+I am still having issues with the make directories of a path funcitonality. It's actually kind of frustrating.
 
 </p>

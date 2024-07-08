@@ -1,6 +1,40 @@
 import os, subprocess
 #from helper_fun import is_dism_available, checkUserInputYorN, CheckOnMkDir, checkIfPathExists #, get_processor_architecture
-from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
+
+
+def convertESDtoWIM(ESDToConvertPath: str, WIMDestPath: str ):
+    """Take in path the input ESD and path to output WIM file. save WIM file at the end. This function only runs if an ESD is used.
+
+    Args:
+        These need work. Full path to ESD and WIM path. I think the wim path is only for the folder since the default file name of
+        install.wim is used (technically the only input is install.esd)
+
+    Returns:
+        None at the moment. this may change.
+    """
+    
+    
+    
+    print(f"Your source folder has an install.esd file: Tiny 11 can only work with WIM files in order to \"Tiny it\". \nOn a Core i7 from 2019 this takes about 7 minutes")
+    print(f"Source ESD file location: {ESDToConvertPath}\nInstall.wim file will be saved to: {WIMDestPath}")
+    
+    if ESDToConvertPath[-1] == "d":
+
+        buildDISMFinal = f"""& DISM /Export-Image /SourceImageFile:'{ESDToConvertPath}' /SourceIndex:3 /DestinationImageFile:'{WIMDestPath}\\install.wim' /Compress:max /CheckIntegrity"""
+
+        try:
+            print("Starting ESD to WIM conversion now...")
+            result = subprocess.run(["powershell", "-Command", buildDISMFinal], capture_output=True, text=True, check=True)
+            print("Conversion completed successfully")
+            print(result.stdout)
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed with return code: {e.returncode}")
+            print(e.stderr)
+        except FileNotFoundError as e:
+            print(f"PowerShell not found: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
 
 
 def remove_quotes(path: str) -> str:
@@ -72,7 +106,6 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
     
     # if the passed in path does NOT exist
     if not checkIfPathExists(DirToCreate):
-    
         try: 
             # attempt to make passed in path/new folder and return true upon success
             print(f"value of dirtocreate is {DirToCreate}")
@@ -81,7 +114,6 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
         # if the attempt to create the folder fails, throw an exception and print the error
         except OSError as e:
             #return str(e)
-
             print(f"Attempt to create path {DirToCreate} resulted in an error, please try again. \
 \n\nError message for reference: \n\n{e}.\n")
         # then return false
@@ -89,9 +121,6 @@ def CheckOnMkDir(DirToCreate: str) -> bool:
     else:
         # if the path already exists, return true
         return True
-
-
-#os.walk()
 
 def checkIfPathExists(PathToCheck: str) -> bool:
     """probably unncecessary abstraction to os.path.exists; sanitizes input if nothing else
@@ -137,7 +166,7 @@ def GetWIMinfoReturnFormatted(ESDorWIMpath: str) -> str:
     try:    
         print("Attempting to get ESD/WIM info now...")
         result = subprocess.run(["powershell", "-Command", DISMgetInfo], capture_output=True, text=True, check=True)
-        print("Info gathered successfully:")
+        #print("Info gathered successfully:")
         # for later reference when researching another project i came across this line, which is what i need to utlize
         # just the endswith part, the email files is not really relevant 
         # email_files = [os.path.join(download_folder, f) for f in os.listdir(download_folder) if f.endswith('.eml')]
