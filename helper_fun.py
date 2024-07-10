@@ -134,7 +134,7 @@ def checkIfPathExists(PathToCheck: str) -> bool:
     """
     
     PathToCheck = PathToCheck.strip().lower()
-    if os.path.exists(PathToCheck) and os.path.isdir(PathToCheck):
+    if os.path.exists(PathToCheck): # and os.path.isdir(PathToCheck):
         return True
     else:
         return False
