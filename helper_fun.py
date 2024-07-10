@@ -47,7 +47,7 @@ def remove_quotes(path: str) -> str:
     Returns:
         str: string path with no quotes
     """
-    
+    # it occured to me the last folder could just end with a quote mark. actually i think this boolean covers this edge case.
     
     if (path.startswith('"') and path.endswith('"')) or (path.startswith("'") and path.endswith("'")):
         return path[1:-1]

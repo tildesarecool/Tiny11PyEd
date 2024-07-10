@@ -1,5 +1,15 @@
 import subprocess, os
-from globals import srcPath, tempDir, sample_input
+from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, remove_quotes, convertESDtoWIM #, get_processor_architecture
+from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove, CreateTiny11Tree
+
+
+
+# idea: single function that just sanitize/validates what's sent to it - for files and directories
+# specifically for files and folder paths 
+# as in send a path the this sanitize/validate function and the function strips/check if exists/takes out quotes if necessary 
+# and returns what it was sent all sanitized. that way i don't have to use strip.lower a million times
+
+
 
 
 def is_dism_available():
@@ -19,8 +29,45 @@ def is_dism_available():
 
 #print(f"value of is_dism_available is {is_dism_available()}")
 
+def CheckOnMkDir(DirToCreate: str) -> bool:
+    """Attempt to create specified folder at specified location. This is supposed to be a generic
+    re-usable function. I think I only use it once or twice. ATM it's probably not a big deal
+    if it's not all purpose/generic.
 
+    Args:
+        DirToCreate (str): Path to folder to create
 
+    Returns:
+        bool: True if folder created successfully, return false with error code all other cases.
+    """
+    #DirToCreate = DirToCreate
+    DirToCreate = remove_quotes(DirToCreate).strip().lower()
+    #DirToCreate = DirToCreate.strip().lower()
+    
+    # if the passed in path does NOT exist
+    if not checkIfPathExists(DirToCreate):
+        try: 
+            # attempt to make passed in path/new folder and return true upon success
+            print(f"value of dirtocreate is {DirToCreate}")
+            os.makedirs(DirToCreate)
+            return True
+        # if the attempt to create the folder fails, throw an exception and print the error
+        except OSError as e:
+            #return str(e)
+            print(f"Attempt to create path {DirToCreate} resulted in an error, please try again. \
+\n\nError message for reference: \n\n{e}.\n")
+        # then return false
+        return False
+    else:
+        # if the path already exists, return true
+        return True
+    
+#builtPath = os.getenv('USERPROFILE') + "\\documents\\tiny 11"
+#print(f"value of path with space is {builtPath}" )
+
+#createTheDir = CheckOnMkDir("\"c:\\users\\keith\\documents\\tiny 11\"")
+
+print(f"Tree for tiny path is {CreateTiny11Tree}")
 
 
 #sample_input.s
