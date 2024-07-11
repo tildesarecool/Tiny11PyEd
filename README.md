@@ -390,7 +390,9 @@ I also created a really bad general purpose "flow chart" in MS Paint. Bad enough
 I am still having issues with the make directories of a path funcitonality. It's actually kind of frustrating.
 
 
+### 10 July 2024
 
+I started working on a more universal path validation/santization function as right now it feels piecemail. I haven't added that function the main script yet, it's in what is now my "testing things" scrpit. I'll implement it tomorrow.
 
 
 

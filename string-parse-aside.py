@@ -1,6 +1,7 @@
 import subprocess, os
 from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, remove_quotes, convertESDtoWIM #, get_processor_architecture
 from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove, CreateTiny11Tree
+from typing import Union
 
 
 
@@ -8,7 +9,7 @@ from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, de
 # specifically for files and folder paths 
 # as in send a path the this sanitize/validate function and the function strips/check if exists/takes out quotes if necessary 
 # and returns what it was sent all sanitized. that way i don't have to use strip.lower a million times
-def ValidateSanitizePath(path: str) -> (str or bool):
+def ValidateSanitizePath(path: str) -> Union[str, bool]:
     """simple utility function to remove any single ' or double " quotes the user might have included in the path. 
     This version makes sure to remove only leading/trailing quotes, to avoid removing ' and/or " in file or folder names.
 
@@ -21,17 +22,16 @@ def ValidateSanitizePath(path: str) -> (str or bool):
     # it occured to me the last folder could just end with a quote mark. actually i think this boolean covers this edge case.
     #path = path.lower()
     if len(path) >= 1:
-        path = path.rstrip()
-        path = path.lstrip()
-        pathExists = checkIfPathExists(path)
-        
-        print(f"The valueo f path exists is {pathExists}, and length is {len(path)}")
-        
-        if ((path.startswith('"') and path.endswith('"')) or (path.startswith("'") and path.endswith("'")) and pathExists):
+        path = path.rstrip().lstrip()
+        if ((path.startswith('"') and path.endswith('"')) or (path.startswith("'") and path.endswith("'"))):
             path = path[1:-1]
+        pathExists = checkIfPathExists(path)    
+        print(f"The value of path exists is {pathExists}, and length is {len(path)}")
+        if pathExists:
+            return path
+        else:
+            return False
 
-            #return path[1:-1]
-        return path
     else:
         #print(f"The path {path} is not valid, please enter a valid path")
         return False
