@@ -1,7 +1,90 @@
 import subprocess, os
-from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, remove_quotes, convertESDtoWIM #, get_processor_architecture
+from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, convertESDtoWIM, ValidateSanitizePath
 from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove, CreateTiny11Tree
 from typing import Union
+
+#def SetTinyWorkDir() -> str:
+#    """    This function is supposed to:
+#    """
+#    print(f"Please enter path for a working directory.\
+#    \nDefault: press enter to use '{defaultTinyPath}' \
+#    \nNote: Assume at least ~20GB of drive space will be required (for ISOs etc) (ctrl+c to get quit script)")
+#    setworkpath = input("Enter a path: ") 
+#    #step 0: if the user pushed enter to use defaults just return the default which is (defined as a global)
+#    if setworkpath == "":
+#        # still need to check for and create said defaults if said folders do no yet exist
+#        #UsingDefault = True
+#        #print(f"\nthe value of setworkpath is {setworkpath}\n")
+#        setworkpath = defaultTinyPath
+#        print(f"\nthe value of setworkpath is {setworkpath}\n")
+#        #if not checkIfPathExists(setworkpath):
+#        if not os.path.exists(setworkpath):
+#            os.makedirs(defaultTinyPathWin11)
+#            os.makedirs(defaultTinyPath + "\\WimMount")
+#
+#        return defaultTinyPath
+#    # step 1: sanitize and validate whatever the user put in as input, clearly in this case not an empty string
+##    setworkpath = ValidateSanitizePath(setworkpath)
+#    else:
+#        DoesPathExist = checkIfPathExists(setworkpath)
+#        if not DoesPathExist:
+#            CheckOnMkDir(setworkpath)
+#
+#
+#        print(f"value of setwork path is --{setworkpath}--")
+#
+#
+#SetTinyWorkDir()
+
+
+#    if  setworkpath: 
+##        setworkpath = ValidateSanitizePath(setworkpath)
+#        print(f"Working directory set to default location of {defaultTinyPath}")
+#        print(f"\nThe default path of {defaultTinyPath} is being used.")
+#        return defaultTinyPath 
+#    elif not checkworkpath: # and setworkpath != "":
+#        print(f"Default path {defaultTinyPath} not found, creating directory.")
+#        if CheckOnMkDir(setworkpath): #os.makedirs(defaultTinyPath):
+#            print(f"Path {defaultTinyPath} created. Path set.")
+#            return defaultTinyPath
+#        else:
+#            SetTinyWorkDir()
+#    elif setworkpath != "":
+#        if checkIfPathExists(setworkpath): # os.path.exists(setworkpath):
+#            print(f"Working directory set to '{setworkpath}'")
+#            return setworkpath
+#        else:
+#            print(f"The path '{setworkpath}' could not be found. Things to check: \
+#\n1. no quotes are required, remove at leading/trailing quotes \
+#\n2. make sure path is a folder not a file, \
+#\n3. also try shift+right click to copy as path a folder and paste (and remove quotes) \
+#\n- on Win 11 you may have to `see more options` \
+#\n") 
+#            #YNCreateDir = input(f"Alternatively, would you like to create directory {setworkpath}? (Y/N) ").strip().lower()
+#            if checkUserInputYorN("y", "Alternatively, would you like to create the directory? (Y/n default: Y)"): #YNCreateDir == "y":
+#                if CheckOnMkDir(setworkpath):
+#                    print(f"Path '{setworkpath}' successfully created  ")
+#                    return setworkpath
+#                else:
+#                    SetTinyWorkDir()
+#            else:
+#                SetTinyWorkDir()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9,36 +92,40 @@ from typing import Union
 # specifically for files and folder paths 
 # as in send a path the this sanitize/validate function and the function strips/check if exists/takes out quotes if necessary 
 # and returns what it was sent all sanitized. that way i don't have to use strip.lower a million times
-def ValidateSanitizePath(path: str) -> Union[str, bool]:
-    """simple utility function to remove any single ' or double " quotes the user might have included in the path. 
-    This version makes sure to remove only leading/trailing quotes, to avoid removing ' and/or " in file or folder names.
 
-    Args:
-        path (str): Path to have quotes stripped out of (leading/trailing)
 
-    Returns:
-        str: string path with no quotes
-    """
-    # it occured to me the last folder could just end with a quote mark. actually i think this boolean covers this edge case.
-    #path = path.lower()
-    if len(path) >= 1:
-        path = path.rstrip().lstrip()
-        if ((path.startswith('"') and path.endswith('"')) or (path.startswith("'") and path.endswith("'"))):
-            path = path[1:-1]
-        pathExists = checkIfPathExists(path)    
-        print(f"The value of path exists is {pathExists}, and length is {len(path)}")
-        if pathExists:
-            return path
-        else:
-            return False
 
-    else:
-        #print(f"The path {path} is not valid, please enter a valid path")
-        return False
 
-validPath = ValidateSanitizePath("c:")
-
-print(f"value of validate path is {validPath}")
+#def ValidateSanitizePath(path: str) -> Union[str, bool]:
+#    """simple utility function to remove any single ' or double " quotes the user might have included in the path. 
+#    This version makes sure to remove only leading/trailing quotes, to avoid removing ' and/or " in file or folder names.
+#
+#    Args:
+#        path (str): Path to have quotes stripped out of (leading/trailing)
+#
+#    Returns:
+#        str: string path with no quotes
+#    """
+#    # it occured to me the last folder could just end with a quote mark. actually i think this boolean covers this edge case.
+#    #path = path.lower()
+#    if len(path) >= 1:
+#        path = path.rstrip().lstrip()
+#        if ((path.startswith('"') and path.endswith('"')) or (path.startswith("'") and path.endswith("'"))):
+#            path = path[1:-1]
+#        pathExists = checkIfPathExists(path)    
+#        print(f"The value of path exists is {pathExists}, and length is {len(path)}")
+#        if pathExists:
+#            return path
+#        else:
+#            return False
+#
+#    else:
+#        #print(f"The path {path} is not valid, please enter a valid path")
+#        return False
+#
+#validPath = ValidateSanitizePath("c:")
+#
+#print(f"value of validate path is {validPath}")
 
 
 #def is_dism_available():

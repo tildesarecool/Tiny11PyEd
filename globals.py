@@ -36,11 +36,9 @@ appxPackagesToRemove: tuple = (
 
 ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 
-
 defaultTinyPath: str = os.getenv('USERPROFILE') + """\\documents\\tiny11""" 
 
 defaultTinyPathWin11: str = defaultTinyPath + """\\win11"""
-
 
 CreateTiny11Tree = f"""Create folder tree for Tiny11:
 Default: 
@@ -48,6 +46,17 @@ Default:
 ---> Win11
 ---> WimMount
 """
+
+
+WImfillPath = """\\sources\\install.wim"""
+ESDfillPath = """\\sources\\install.esd"""
+
+# WimPath = WinInstallSourceRoot + WImfillPath
+# ESDPath = WinInstallSourceRoot + ESDfillPath
+
+
+
+
 
 
 # not sure i already thought of this: check if 

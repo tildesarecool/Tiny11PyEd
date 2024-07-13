@@ -394,6 +394,16 @@ I am still having issues with the make directories of a path funcitonality. It's
 
 I started working on a more universal path validation/santization function as right now it feels piecemail. I haven't added that function the main script yet, it's in what is now my "testing things" scrpit. I'll implement it tomorrow.
 
+### 12 July 2024
+
+Today I think I finished-finished-for-now what should have been a really easy task. Just had to complete that particular piece of functionality in a great number of ways before settling. 
+
+Anyway, I think now is as a good a time as any to see if I can develop a copy utility. Or rather decide if I want to attempt to develop this file copy utlity via a separate repo and still manage to integrate into Tiny11 Py ed. I can see how this could have both advanatges and disadvantages.
+
+Like if I break the utility in the other repo I can't test it in this one until it's fixed. I would have the latest version fo the copy utlity rather two separate versions I would have to try and sync between manually. Or possibly I'm completely misunderstanding how such a process would work. 
+
+This is more of a file system/git question than a Python programming issue I think. 
+
 
 
 </p>
