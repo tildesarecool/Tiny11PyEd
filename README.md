@@ -8,6 +8,8 @@ Below I have something of a development log (in case you have a need to read bor
 
 This started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs/tiny11builder), a PowerShell script to remove certain components from a Windows 10/11 install source.  Today I decided to save the fork repo for a PS edition fork and save this python edition to a separate repo. That went about as well as I expected (time consuming/difficulties with git).
 
+13 July 2024 - Just a quick side note I've started work on a separate copy utility that will plug-in to this script eventually. Well likely a highly customized version of it but definitely the same code base. I am using a [separate github repo and it's called Hyper Tree Clone](https://github.com/tildesarecool/Hyper-Tree-Clone.git)  (though that's more of a working title).
+
 </p>
 
 <hr>
