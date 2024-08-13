@@ -9,6 +9,7 @@ import multiprocessing as mp
 from multiprocessing import Pool
 import os, shutil, time, threading, argparse, sys, msgpack
 
+# moved to globals file
 #FAT32_MAX_FILE_SIZE = 4 * 1024 * 1024 * 1024  # 4 GB
 
 
