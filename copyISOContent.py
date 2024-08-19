@@ -1,6 +1,6 @@
 
 
-from globals import srcPath, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove, FAT32_MAX_FILE_SIZE
+from globals import srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove, FAT32_MAX_FILE_SIZE
 from typing import Union
 
 from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, convertESDtoWIM, ValidateSanitizePath
@@ -15,3 +15,7 @@ import os, shutil, time, threading, argparse, sys, msgpack
 
 #print(f"number is {FAT32_MAX_FILE_SIZE}")
 
+class CopyISOTree:
+    def __init__():
+        pass
+    
