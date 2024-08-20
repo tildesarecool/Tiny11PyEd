@@ -22,8 +22,13 @@ class CopyISOTree:
         pass
     def fs_fat32_determine(drvletter: str) -> int:
         """Return true or false for fat32 filesystem given a drive letter.
+        Or more specifically:
+        drive letter does not exist at all: return -1
+        drive letter exists but is NOT fat32: return 0
+        drive letter exists and IS fat32 return 1
         
-        Also false if there is no such drive letter since the 'raise ValueError' apparently doesn't work
+        This could probably be simplified(?)
+        
         
         drive letters created by google drive return fat32...
         
