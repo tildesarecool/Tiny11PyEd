@@ -32,6 +32,18 @@ class CopyISOTree:
         
         drive letters created by google drive return fat32...
         
+        --------->how to use the fat32 method           
+        fat32_true_false = CopyISOTree.fs_fat32_determine('k:')
+        print(f"fat32_true_false true/false is {fat32_true_false}")
+        
+        if fat32_true_false < 0:
+            print("drive letter does not exist")
+        elif fat32_true_false == 0:
+            print("drive letter found and it is NOT fat32")
+        else:
+            print("drive letter found and it IS fat32")
+        --------->how to use the fat32 method
+        
         """
         validate_drive = os.path.splitdrive(drvletter)[0].rstrip().lstrip()
         
@@ -48,16 +60,10 @@ class CopyISOTree:
             return -1
 
 
-############# how to use the fat32 method           
-#fat32_true_false = CopyISOTree.fs_fat32_determine('k:')
-#print(f"fat32_true_false true/false is {fat32_true_false}")
-#
-#if fat32_true_false < 0:
-#    print("drive letter does not exist")
-#elif fat32_true_false == 0:
-#    print("drive letter found and it is NOT fat32")
-#else:
-#    print("drive letter found and it IS fat32")
-############# how to use the fat32 method
 
-
+    def copy_files(file_info) -> None:
+        src, dest = file_info
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        shutil.copy2(src, dest)
+        
+        
