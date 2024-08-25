@@ -406,6 +406,12 @@ Like if I break the utility in the other repo I can't test it in this one until 
 
 This is more of a file system/git question than a Python programming issue I think. 
 
+### 25 August 2024
 
+After spending weeks on a copy utility I ended up not really needing a copy utility. But I did learn a lot.
+
+Enough that I started "porting" for lack of a better term the copy funcitonality over to the main Tiny11Builder script - in a separate file and as a class this time.
+
+It's still a rough work in progress but I feel like I'm making more than zero progress. As mention elsewhere, the default time to copy what I want is about 12 seconds so meeting or beating that time would be fine by me.
 
 </p>

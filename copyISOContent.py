@@ -60,10 +60,32 @@ class CopyISOTree:
             return -1
 
 
-
-    def copy_files(file_info) -> None:
-        src, dest = file_info
+    def copy_files(src: str, dst: str) -> None:
+        #src, dest = file_info # legacy code, from when i was doing chunking
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         shutil.copy2(src, dest)
+    
+    def copy_small_files(small_files) -> None:
+        # Sort files by size (optional: smallest to largest or vice versa)
+        small_files.sort(key=lambda x: os.path.getsize(x[0]))  # Smallest to largest
+        # small_files.sort(key=lambda x: os.path.getsize(x[0]), reverse=True)  # Largest to smallest
+        for src, dest in small_files:
+            copy_file(src, dest)
         
+    def generate_small_file_dir_tree(src: str, dst: str) -> None:
+        small_files = []
+
+        for root, _, files in os.walk(source_dir):
+            for file in files:
+                src_path = os.path.join(root, file)
+                rel_path = os.path.relpath(src_path, source_dir)
+                dest_path = os.path.join(dest_dir, rel_path)
+                if src_path not in [large_files[0][0], large_files[1][0]]:  # Skip large files
+                    small_files.append((src_path, dest_path))
+
+    def copy_wim_files(src: str, dst: str) -> None:
+        large_files = [
+            (os.path.join(source_dir, 'sources', 'install.wim'), os.path.join(dest_dir, 'sources', 'install.wim')),
+            (os.path.join(source_dir, 'sources', 'boot.wim'), os.path.join(dest_dir, 'sources', 'boot.wim'))
+        ]
         
