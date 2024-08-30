@@ -20,7 +20,7 @@ PROGRESS_RUNNING = False
 class CopyISOTree:
     def __init__():
         pass
-    def fs_fat32_determine(drvletter: str) -> int:
+    def fs_fat32_determine(self, drvletter: str) -> int:
         """Return true or false for fat32 filesystem given a drive letter.
         Or more specifically:
         drive letter does not exist at all: return -1
@@ -60,19 +60,19 @@ class CopyISOTree:
             return -1
 
 
-    def copy_files(src: str, dst: str) -> None:
+    def copy_files(self, src: str, dest: str) -> None:
         #src, dest = file_info # legacy code, from when i was doing chunking
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         shutil.copy2(src, dest)
     
-    def copy_small_files(small_files) -> None:
+    def copy_small_files(self, small_files: list) -> None:
         # Sort files by size (optional: smallest to largest or vice versa)
         small_files.sort(key=lambda x: os.path.getsize(x[0]))  # Smallest to largest
         # small_files.sort(key=lambda x: os.path.getsize(x[0]), reverse=True)  # Largest to smallest
         for src, dest in small_files:
-            copy_file(src, dest)
+            self.generate_small_file_dir_tree(src, dest)
         
-    def generate_small_file_dir_tree(src: str, dst: str) -> None:
+    def generate_small_file_dir_tree(self, source_dir: str, dest_dir: str) -> list:
         small_files = []
 
         for root, _, files in os.walk(source_dir):
@@ -80,10 +80,13 @@ class CopyISOTree:
                 src_path = os.path.join(root, file)
                 rel_path = os.path.relpath(src_path, source_dir)
                 dest_path = os.path.join(dest_dir, rel_path)
-                if src_path not in [large_files[0][0], large_files[1][0]]:  # Skip large files
+                
+                if not file.endswith("wim"):
+                
+                #if src_path not in [large_files[0][0], large_files[1][0]]:  # Skip large files
                     small_files.append((src_path, dest_path))
 
-    def copy_wim_files(src: str, dst: str) -> None:
+    def copy_wim_files(self, source_dir: str, dest_dir: str) -> None:
         large_files = [
             (os.path.join(source_dir, 'sources', 'install.wim'), os.path.join(dest_dir, 'sources', 'install.wim')),
             (os.path.join(source_dir, 'sources', 'boot.wim'), os.path.join(dest_dir, 'sources', 'boot.wim'))
