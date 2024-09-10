@@ -1,8 +1,23 @@
-import subprocess, os
-from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, convertESDtoWIM, ValidateSanitizePath
+import subprocess, os, platform
+# from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, convertESDtoWIM, ValidateSanitizePath
 from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove, CreateTiny11Tree
-from typing import Union
+# from typing import Union
+from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
+from globals import ANSI_COLORS, colored_print
 
+#colored_print(BRIGHT_BLACK, "Is this grey? yes (BRIGHT_BLACK)")
+#colored_print(BLUE, "Is this bright blue? yes (BLUE)")
+#colored_print(BRIGHT_MAGENTA, "Is this bright BRIGHT_MAGENTA? yes (BRIGHT_MAGENTA)")
+#colored_print(MAGENTA, "Is this bright MAGENTA? yes (MAGENTA)")
+#colored_print(BRIGHT_CYAN, "Is this bright BRIGHT_CYAN? yes (BRIGHT_CYAN)")
+
+#colored_print(BRIGHT_BLUE, platform.system())
+
+if platform.system().lower() != "windows":
+        colored_print(BRIGHT_RED, "This script only works with Windows 10 or later")
+
+#colored_print(GREEN if not invalid_files else RED, message)
+ 
 #def SetTinyWorkDir() -> str:
 #    """    This function is supposed to:
 #    """

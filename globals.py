@@ -1,4 +1,4 @@
-import os
+import os, platform
 import multiprocessing as mp
 
 srcPath = None
@@ -8,6 +8,7 @@ FAT32_MAX_FILE_SIZE = 4 * 1024**3  # 4 GB
 
 TOTAL_CPUS = mp.cpu_count()
 
+SYSTEM_ARCH = platform.architecture()[0]
 
 
 
@@ -41,6 +42,119 @@ appxPackagesToRemove: tuple = (
 'MicrosoftTeams_', 
 'Microsoft.549981C3F5F10_')
 
+############################################################################################################
+# THESE COLORS ONLY WORK ON WINDOWS 10 AND LATER (not made with Linux etc in mind)
+# This is an alternative to having to use another library like colorama. Not very many colors but I can work with it
+# example using with normal print: 
+# print(f"{RED}This is red text{RESET}")
+
+# Standard Colors
+BLACK = "\033[30m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+MAGENTA = "\033[35m"
+CYAN = "\033[36m"
+WHITE = "\033[37m"
+
+# Bright Colors
+BRIGHT_BLACK = "\033[90m"   # Often appears as gray
+BRIGHT_RED = "\033[91m"
+BRIGHT_GREEN = "\033[92m"
+BRIGHT_YELLOW = "\033[93m"
+BRIGHT_BLUE = "\033[94m"
+BRIGHT_MAGENTA = "\033[95m"
+BRIGHT_CYAN = "\033[96m"
+BRIGHT_WHITE = "\033[97m"
+
+# Reset
+RESET = "\033[0m"    
+###########################    
+
+# Could also use this utility function...
+def colored_print(color, message):
+    print(f"{color}{message}{RESET}")
+
+# Usage
+#colored_print(RED, "This is red text")
+#colored_print(BRIGHT_GREEN, "This is bright green text")
+ANSI_COLORS: tuple = (
+BLACK, 
+RED, 
+GREEN, 
+YELLOW, 
+BLUE, 
+MAGENTA, 
+CYAN, 
+WHITE, 
+BRIGHT_BLACK, 
+BRIGHT_RED, 
+BRIGHT_GREEN, 
+BRIGHT_YELLOW, 
+BRIGHT_BLUE, 
+BRIGHT_MAGENTA, 
+BRIGHT_CYAN, 
+BRIGHT_WHITE, 
+RESET
+)
+############################################################################################################
+
+
+__RAW_BANNER__ = '''
+████████╗██╗███╗   ██╗██╗   ██╗     ██╗ ██╗                              
+╚══██╔══╝██║████╗  ██║╚██╗ ██╔╝    ███║███║                              
+   ██║   ██║██╔██╗ ██║ ╚████╔╝     ╚██║╚██║                              
+   ██║   ██║██║╚██╗██║  ╚██╔╝       ██║ ██║                              
+   ██║   ██║██║ ╚████║   ██║        ██║ ██║                              
+   ╚═╝   ╚═╝╚═╝  ╚═══╝   ╚═╝        ╚═╝ ╚═╝                              
+                                                                         
+███╗   ███╗ █████╗ ██╗  ██╗███████╗██████╗                               
+████╗ ████║██╔══██╗██║ ██╔╝██╔════╝██╔══██╗                              
+██╔████╔██║███████║█████╔╝ █████╗  ██████╔╝                              
+██║╚██╔╝██║██╔══██║██╔═██╗ ██╔══╝  ██╔══██╗                              
+██║ ╚═╝ ██║██║  ██║██║  ██╗███████╗██║  ██║                              
+╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝                              
+                                                                         
+██████╗ ██╗   ██╗████████╗██╗  ██╗ ██████╗ ███╗   ██╗    ███████╗██████╗ 
+██╔══██╗╚██╗ ██╔╝╚══██╔══╝██║  ██║██╔═══██╗████╗  ██║    ██╔════╝██╔══██╗
+██████╔╝ ╚████╔╝    ██║   ███████║██║   ██║██╔██╗ ██║    █████╗  ██║  ██║
+██╔═══╝   ╚██╔╝     ██║   ██╔══██║██║   ██║██║╚██╗██║    ██╔══╝  ██║  ██║
+██║        ██║      ██║   ██║  ██║╚██████╔╝██║ ╚████║    ███████╗██████╔╝
+╚═╝        ╚═╝      ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ╚══════╝╚═════╝ '''
+
+
+PY_WIN_LOGO = """
+               .-=+##@@@@@@@##+=:                                                                   
+           .-*@@@@@@@@@@@@@@@@@@@@%=:                                                               
+         .%@@@@@@@@@@@@@@@@@@@@@@@@@@@=.                                                            
+        #@@@@@@@@@@#+++++++++#@@@@@@@@@@#                                                           
+      *@@@@@@@@@=.            .=@@@@@@@@@@*                                                         
+    :@@@@@@@@@@*  @@%           :@@@@@@@@@@@:                                                       
+   =@@@@@@@@@@@+  *#+            @@@@@@@@@@@@=                                        -             
+  =@@@@@@@@@@@@*::::::::.        @@@@@@@@@@@@@=                               .  =:#%%@@#@+=-       
+ .@@@@@@@@%%%%%%%%%%%%%%=        @%%%%%@@@@@@@@.                             =@-.@@@@@@@@@*+@=      
+ @@@@@@@#                        @      -@@@@@@@                            .@@#@@@@@@@@@@@@#.-.    
++@@@@@@+                         @       +@@@@@@+                          @@@@@@@@@@@@@@@@@@@+.    
+#@@@@@@                         =%        @@@@@@# #%%%:                    =@@@@@@@@@@@@@@@@@@+     
+@@@@@@+                       :+%.        *@@@@@@@@@@@@@%%+-:          =-+#@@@@@@@%##=====::+@@@    
+@@@@@@+         .=*+++++++++++#-          +@@@@@@=*****#%@@@@@##:.    .@@@@@@--:    +       .@@@*#*-
+@@@@@@+        +#:                        +@@@@@@         ==##%@@%**.+*@@@@@@...    +       .+@@@@@*
+#@@@@@@       +#                         .@@@@@@#               ==*@@@@@@@@@@...    +...    .+@@@@@%
++@@@@@@+      ++                         +@@@@@@+                    -#@@@@@@+++++++#++++++++#@@@@@ 
+ @@@@@@@*     ++                        *@@@@@@@                      +@@@@@@.......+ .......+@@@@@ 
+ :@@@@@@@@%###%+        =#############%@@@@@@@@:                       *@@@@@ .     +        +@@@@@*
+  +@@@@@@@@@@@@+                 @@@@@@@@@@@@@+                        +@@@@@:......+........+@@@@* 
+   =@@@@@@@@@@@+            *#=  @@@@@@@@@@@@=                         :-=#@@@@@%##*#=-----..+@@@@+ 
+    :@@@@@@@@@@*.           #%= =@@@@@@@@@@@:                              @@@@@@@@@@@@@@@@@@@@+:   
+      *@@@@@@@@@%=.           .*@@@@@@@@@@*                                =*@@@@@@@@@@@%@@*=:      
+        #@@@@@@@@@@@@+++++++@@@@@@@@@@@@#                                       +#  +#@-            
+         :%@@@@@@@@@@@@@@@@@@@@@@@@@@@=:                                             ..             
+           .-*@@@@@@@@@@@@@@@@@@@@%+-                                                               
+               .-=*##@@@@@@@##*=:                                                                   
+
+"""
+
 
 ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 
@@ -56,16 +170,11 @@ Default:
 """
 
 
-WImfillPath = """\\sources\\install.wim"""
-ESDfillPath = """\\sources\\install.esd"""
+WIM_REL_PATH = """\\sources\\install.wim"""
+ESD_REL_PATH = """\\sources\\install.esd"""
 
 # WimPath = WinInstallSourceRoot + WImfillPath
 # ESDPath = WinInstallSourceRoot + ESDfillPath
-
-
-
-
-
 
 # not sure i already thought of this: check if 
 # userprofile/documents/tiny11 already exists
@@ -79,6 +188,9 @@ menu_items = "0.\tQuit action" #
 #\n5.\tCheck if dism available action: is_dism_available \
 #\n999.\t!!Just do the thing already!! \
 #"
+
+
+
 
 
 sample_input = """Index : 1
@@ -135,3 +247,5 @@ Index : 11
 Name : Windows 11 Pro N for Workstations
 Description : Windows 11 Pro N for Workstations
 Size : 18,240,830,013 bytes"""
+
+
