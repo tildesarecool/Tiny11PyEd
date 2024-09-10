@@ -4,6 +4,27 @@ from globals import srcPath, tempDir, sample_input, menu_items, ESDPathAlien, de
 # from typing import Union
 from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
 from globals import ANSI_COLORS, colored_print
+import tomllib
+import shutil, math
+
+total, used, free = shutil.disk_usage("C:/")
+# Convert free space to gigabytes
+free_gb = round(free / (1024 ** 3), 2)
+
+# Convert free space to terabytes if needed
+free_tb = round(free / (1024 ** 4), 2)
+
+# Check if free space is greater than or equal to 1 TB
+if free_gb >= 1024:
+    # Calculate TB and remaining GB
+    terabytes = int(free_tb)
+    gigabytes = round((free_tb - terabytes) * 1024, 2)
+    print(f"{terabytes} TB {gigabytes} GBs free")
+else:
+    # Display in GB if less than 1 TB
+    print(f"{free_gb} GBs free")
+
+
 
 #colored_print(BRIGHT_BLACK, "Is this grey? yes (BRIGHT_BLACK)")
 #colored_print(BLUE, "Is this bright blue? yes (BLUE)")
@@ -13,8 +34,8 @@ from globals import ANSI_COLORS, colored_print
 
 #colored_print(BRIGHT_BLUE, platform.system())
 
-if platform.system().lower() != "windows":
-        colored_print(BRIGHT_RED, "This script only works with Windows 10 or later")
+#if platform.system().lower() != "windows":
+#        colored_print(BRIGHT_RED, "This script only works with Windows 10 or later")
 
 #colored_print(GREEN if not invalid_files else RED, message)
  

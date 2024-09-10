@@ -161,6 +161,7 @@ ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 defaultTinyPath: str = os.getenv('USERPROFILE') + """\\documents\\tiny11""" 
 
 defaultTinyPathWin11: str = defaultTinyPath + """\\win11"""
+defaultTinyPathWimMount: str = defaultTinyPath + """\\WimMount"""
 
 CreateTiny11Tree = f"""Create folder tree for Tiny11:
 Default: 
