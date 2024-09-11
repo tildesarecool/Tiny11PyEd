@@ -72,9 +72,9 @@ BRIGHT_WHITE = "\033[97m"
 RESET = "\033[0m"    
 ###########################    
 
-# Could also use this utility function...
-def colored_print(color, message):
-    print(f"{color}{message}{RESET}")
+# Could also use this utility function...moved this function to function_defs.py
+#def colored_print(color, message):
+#    print(f"{color}{message}{RESET}")
 
 # Usage
 #colored_print(RED, "This is red text")
