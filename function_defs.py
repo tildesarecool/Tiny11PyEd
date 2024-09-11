@@ -1,20 +1,22 @@
-import tomllib, shutil, os, subprocess, platform
+import tomllib, shutil, os, subprocess, platform, win32com.client
 #import os, subprocess
 import multiprocessing as mp
 from globals import PY_WIN_LOGO, TOTAL_CPUS, SYSTEM_ARCH,  __RAW_BANNER__   #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
 from globals import defaultTinyPathWin11, defaultTinyPathWimMount, defaultTinyPath
 from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
-import win32com.client
+#import win32com.client
 
+#import pywin32
 
 def colored_print(color: str, message: str) -> None:
     print(f"{color}{message}{RESET}")
-    
 
 def confirmDocumentsPath() -> str:
+    
     shell = win32com.client.Dispatch("WScript.Shell")
     documents_path = shell.SpecialFolders("MyDocuments")
     return documents_path
+
 
 def calcCDriveSpace(drive: str) -> list:
     total, used, free = shutil.disk_usage(drive)
