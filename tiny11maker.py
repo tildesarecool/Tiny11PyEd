@@ -88,7 +88,7 @@ def main():
 #    print(f"doc path is {confirmDocumentsPath()}")
 
     print("All below defaults can be customized in settings\n")
-    print("Working directory is set to:") 
+    print("Working directory is set to:")
     colored_print(YELLOW, f"{defaultTinyPath}\n")
     print(f"Windows 11 install source (such as ISO contents) will be copied to:")
     colored_print( YELLOW, f"{defaultTinyPathWin11}\n")
@@ -109,6 +109,8 @@ def main():
     else:
         print(f"You have {calcDriveSpace(confirmDocumentsPath())[0]} TBs, {calcDriveSpace(confirmDocumentsPath())} GBs free")
 
+    if confirmDocumentsPath() == os.getenv('USERPROFILE') + "documents":
+        print("\n\nThe paths match")
 
 #    WinSrcRoot = SetWindowsSourcePath()            
 #    #print(f"Windows source dir is \n{WinSrcRoot}")
