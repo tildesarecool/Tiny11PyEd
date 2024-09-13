@@ -100,9 +100,9 @@ def main():
     print(f"calcDriveSpace(confirmDocumentsPath())[0] is now {calcDriveSpace(confirmDocumentsPath())[0]}")
     print(f"calcDriveSpace('c:')[0] is now {calcDriveSpace('c:')[0]}")
     
-    drive_space = calcDriveSpace('c:')[1]
+    drive_space = calcDriveSpace('c:')[0]
     if drive_space is not None:
-        print(f"calcDriveSpace('c:')[1] is now {calcDriveSpace('c:')[1]}")
+        print(f"calcDriveSpace('c:')[1] is now {calcDriveSpace('c:')[0]}")
 
     if calcDriveSpace(confirmDocumentsPath())[0] == 0:
         print(f"You have {calcDriveSpace(confirmDocumentsPath()[0])} Gigabytes of free space") #{calcCDriveSpace()[1]}")
