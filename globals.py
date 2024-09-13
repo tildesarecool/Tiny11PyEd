@@ -158,7 +158,7 @@ PY_WIN_LOGO = """
 
 ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 
-defaultTinyPath: str = os.getenv('USERPROFILE') + """\\documents\\tiny11""" 
+defaultTinyPath: str = os.getenv('USERPROFILE') + """\\documents\\tiny11""".lstrip().rstrip().lower()
 
 defaultTinyPathWin11: str = defaultTinyPath + """\\win11"""
 defaultTinyPathWimMount: str = defaultTinyPath + """\\WimMount"""

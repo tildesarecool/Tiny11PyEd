@@ -69,19 +69,24 @@
 import tomllib, shutil
 import os, subprocess
 #from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, convertESDtoWIM, ValidateSanitizePath
-from globals import  defaultTinyPathWin11, defaultTinyPathWimMount, PY_WIN_LOGO,  TOTAL_CPUS, SYSTEM_ARCH,  __RAW_BANNER__, defaultTinyPath  #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
-from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
-from function_defs import colored_print, calcCDriveSpace, confirmDocumentsPath
+from globals import defaultTinyPathWin11, defaultTinyPathWimMount, PY_WIN_LOGO,  TOTAL_CPUS, SYSTEM_ARCH
+from globals import __RAW_BANNER__, defaultTinyPath  #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
+from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN
+from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
+from function_defs import colored_print, calcDriveSpace, confirmDocumentsPath
 
 
 def main():
-    
-    print(f"value of documents path is \n{confirmDocumentsPath()}")
+    confirmDocumentsPath()
+#    print(f"value of documents path is \n{confirmDocumentsPath()}")
 
     #colored_print(CYAN, __RAW_BANNER__)
     #colored_print(GREEN, PY_WIN_LOGO)
 
 #    colored_print(BLUE, f"Welcome to Tiny11 Maker\n\n")
+
+#    print(f"doc path is {confirmDocumentsPath()}")
+
     print("All below defaults can be customized in settings\n")
     print("Working directory is set to:") 
     colored_print(YELLOW, f"{defaultTinyPath}\n")
@@ -91,10 +96,18 @@ def main():
     print(f"The install.wim file will be mounted at location:")
     colored_print( YELLOW, f"{defaultTinyPathWimMount}\n\n")
 
-    if calcCDriveSpace("c:/")[0] != 0:
-        print(f"You have {calcCDriveSpace('c:/')[0]} Gigabytes of free space") #{calcCDriveSpace()[1]}")
+    print(f"calcDriveSpace(confirmDocumentsPath()) is now {calcDriveSpace(confirmDocumentsPath())}")
+    print(f"calcDriveSpace(confirmDocumentsPath())[0] is now {calcDriveSpace(confirmDocumentsPath())[0]}")
+    print(f"calcDriveSpace('c:')[0] is now {calcDriveSpace('c:')[0]}")
+    
+    drive_space = calcDriveSpace('c:')[1]
+    if drive_space is not None:
+        print(f"calcDriveSpace('c:')[1] is now {calcDriveSpace('c:')[1]}")
+
+    if calcDriveSpace(confirmDocumentsPath())[0] == 0:
+        print(f"You have {calcDriveSpace(confirmDocumentsPath()[0])} Gigabytes of free space") #{calcCDriveSpace()[1]}")
     else:
-        print(f"You have {calcCDriveSpace('c:/')[0]} TBs, {calcCDriveSpace('c:/')[1]} GBs free")
+        print(f"You have {calcDriveSpace(confirmDocumentsPath())[0]} TBs, {calcDriveSpace(confirmDocumentsPath())} GBs free")
 
 
 #    WinSrcRoot = SetWindowsSourcePath()            
@@ -115,35 +128,4 @@ if __name__ == "__main__":
     main()
     
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

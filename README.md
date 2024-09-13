@@ -16,6 +16,10 @@ This started out as a fork of [Tiny11 by ntdevlabs](https://github.com/ntdevlabs
 
 <p>
 
+## 12 September update
+
+Ended up taking something of a hiatus. And then getting distracted. And coming the conclusion there was no reason to make that copy utility which I mentioned probably. In the past week or so I decided to start the whole script over. Using the old version for reference and I'm going to use the things I learned from the copy utility. I've already thought of a extra variable I didn't think of before (the user customizing the "documents" folder location). So going ahead with the re-write.
+
 ## 2 July update
 
 I realized today I'd been working on this for a month or so off-and-on, yet it feels like I've made 
@@ -413,5 +417,17 @@ After spending weeks on a copy utility I ended up not really needing a copy util
 Enough that I started "porting" for lack of a better term the copy funcitonality over to the main Tiny11Builder script - in a separate file and as a class this time.
 
 It's still a rough work in progress but I feel like I'm making more than zero progress. As mention elsewhere, the default time to copy what I want is about 12 seconds so meeting or beating that time would be fine by me.
+
+### 12 September 2024
+
+I've started over from scratch. I was trying to decide if I wanted make everything a class or not. I don't think there's a real need to. 
+
+I also spent a long time creating a logo and converting that to ASCII. That was *so worth it.* It does add something to the presentation. 
+
+I think the biggest thing is realizing the documents folder can be customized. So I don't want to just default to the documents folder in the user profile, I want to use the actual documents path as set by the user. 
+
+Then, based on that, get the drive letter and mention to the user if the drive space may not be suffecient.
+
+I'm also utilizing Trello to try and track what I need and what I've done already. This is a much better approach.
 
 </p>

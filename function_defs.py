@@ -1,9 +1,10 @@
 import tomllib, shutil, os, subprocess, platform
 #import os, subprocess
 import multiprocessing as mp
-from globals import PY_WIN_LOGO, TOTAL_CPUS, SYSTEM_ARCH,  __RAW_BANNER__   #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
-from globals import defaultTinyPathWin11, defaultTinyPathWimMount, defaultTinyPath
-from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
+from globals import defaultTinyPathWin11, defaultTinyPathWimMount, PY_WIN_LOGO,  TOTAL_CPUS, SYSTEM_ARCH
+from globals import __RAW_BANNER__, defaultTinyPath  #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
+from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN
+from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
 import win32com.client
 
 
@@ -12,11 +13,49 @@ def colored_print(color: str, message: str) -> None:
     
 
 def confirmDocumentsPath() -> str:
+    # upon further reflection I should just use this special folders approach to finding the 
+    # documents folder and create tiny11 folder from there. Instead of user the 
+    # %profile% environment variable and comparing to what it really is. 
+    # that seems like an unecessary step
     shell = win32com.client.Dispatch("WScript.Shell")
-    documents_path = shell.SpecialFolders("MyDocuments")
-    return documents_path
+    documents_path = shell.SpecialFolders("MyDocuments") + """\\tiny11"""
 
-def calcCDriveSpace(drive: str) -> list:
+#    print(f"documents path is {documents_path}, while defaultTinyPath is {defaultTinyPath}")
+
+    if defaultTinyPath.lstrip().rstrip().lower() == documents_path.lstrip().rstrip().lower():
+        print(f"first two characters are {documents_path[:2]}")
+        return defaultTinyPath[:2]
+    else:
+        print(f"documents path is {documents_path}, while defaultTinyPath is {defaultTinyPath}")
+        return documents_path[:2]
+
+
+
+#    if defaultTinyPath == documents_path:
+#        #return documents_path
+#    #else:
+#        rootDrive = documents_path[1]
+#        #return documents_path
+#        return documents_path
+    
+    #return documents_path
+
+# def confirmDocPath() -> bool:
+#     if defaultTinyPath == confirmDocumentsPath():
+#         return True
+#     else:
+#         return False
+#     
+# def defineDocPath() -> str:
+#     if confirmDocPath:
+#         return defaultTinyPath
+#     else:
+#         return confirmDocumentsPath
+
+
+
+
+def calcDriveSpace(drive: str) -> list:
     total, used, free = shutil.disk_usage(drive)
     # Convert free space to gigabytes
     free_gb: int = round(free / (1024 ** 3), 2)
@@ -33,6 +72,6 @@ def calcCDriveSpace(drive: str) -> list:
 #        print(f"{terabytes} TB {gigabytes} GBs free")
     else:
         # Display in GB if less than 1 TB
-        gb_space = [free_gb]
+        gb_space: list = [free_gb]
         return gb_space
 #        print(f"{free_gb} GBs free")
