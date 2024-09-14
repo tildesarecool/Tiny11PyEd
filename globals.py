@@ -1,5 +1,6 @@
 import os, platform
 import multiprocessing as mp
+import win32com.client
 
 srcPath = None
 tempDir = None
@@ -158,17 +159,22 @@ PY_WIN_LOGO = """
 
 ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 
-defaultTinyPath: str = os.getenv('USERPROFILE') + """\\documents\\tiny11""".lstrip().rstrip().lower()
+#defaultTinyPath: str = os.getenv('USERPROFILE') + """\\documents\\tiny11""".lstrip().rstrip().lower()
+shell = win32com.client.Dispatch("WScript.Shell")
+DOCUMENTS_PATH = shell.SpecialFolders("MyDocuments")# + """\\tiny11"""
 
-defaultTinyPathWin11: str = defaultTinyPath + """\\win11"""
-defaultTinyPathWimMount: str = defaultTinyPath + """\\WimMount"""
+DEFAULT_TINY_PATH: str = DOCUMENTS_PATH + """\\tiny11"""
 
-CreateTiny11Tree = f"""Create folder tree for Tiny11:
-Default: 
-{defaultTinyPath}
----> Win11
----> WimMount
-"""
+DEFAULT_TINY_PATH_WIN11: str = DOCUMENTS_PATH + """\\win11"""
+
+DEFAULT_TINY_PATH_WIM_MOUNT: str = DOCUMENTS_PATH + """\\WimMount"""
+
+# CreateTiny11Tree = f"""Create folder tree for Tiny11:
+# Default: 
+# {defaultTinyPath}
+# ---> Win11
+# ---> WimMount
+# """
 
 
 WIM_REL_PATH = """\\sources\\install.wim"""
