@@ -12,8 +12,12 @@ def colored_print(color: str, message: str) -> None:
     print(f"{color}{message}{RESET}")
     
 
-def confirmDocumentsPath() -> str:
-    pass
+def confirmDocumentsPaths() -> str:
+    if DOCUMENTS_PATH:
+        
+
+        pass
+
 
 
 

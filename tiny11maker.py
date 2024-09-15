@@ -73,7 +73,7 @@ from globals import DEFAULT_TINY_PATH_WIN11, DEFAULT_TINY_PATH_WIM_MOUNT, PY_WIN
 from globals import __RAW_BANNER__, DEFAULT_TINY_PATH  #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
 from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN
 from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
-from function_defs import colored_print, calcDriveSpace, confirmDocumentsPath
+from function_defs import colored_print, calcDriveSpace, confirmDocumentsPaths
 
 
 def main():
