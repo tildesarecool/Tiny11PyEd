@@ -4,23 +4,23 @@ import multiprocessing as mp
 from globals import DEFAULT_TINY_PATH_WIN11, DEFAULT_TINY_PATH_WIM_MOUNT, PY_WIN_LOGO,  TOTAL_CPUS, SYSTEM_ARCH
 from globals import __RAW_BANNER__, DEFAULT_TINY_PATH  #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
 from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN
-from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
+from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET, DEFAULT_TINY_PATH_WIN11_WIM, DEFAULT_TINY_PATH_WIN11_ESD
 import win32com.client
-
 
 def colored_print(color: str, message: str) -> None:
     print(f"{color}{message}{RESET}")
-    
 
 def confirmDocumentsPaths() -> str:
-    if DOCUMENTS_PATH:
-        
+    if os.path.exists(DEFAULT_TINY_PATH):
+        return True
+    else:
+        return False
+        #if os.path.exists(DEFAULT_TINY_PATH_WIN11_WIM) or os.path.exists(DEFAULT_TINY_PATH_WIN11_ESD):
 
-        pass
+def getDocsDrive():
+    return str(DEFAULT_TINY_PATH[:2]).strip()
 
-
-
-
+#        print("Time to create some folders.")
 
 def calcDriveSpace(drive: str) -> list:
     total, used, free = shutil.disk_usage(drive)
@@ -31,6 +31,7 @@ def calcDriveSpace(drive: str) -> list:
     free_tb: int = round(free / (1024 ** 4), 2)
 
     # Check if free space is greater than or equal to 1 TB
+    # TODO: re-test the TBs free thing
     if free_gb >= 1024:
         # Calculate TB and remaining GB
         terabytes: int = int(free_tb)
@@ -39,8 +40,9 @@ def calcDriveSpace(drive: str) -> list:
 #        print(f"{terabytes} TB {gigabytes} GBs free")
     else:
         # Display in GB if less than 1 TB
-        gb_space: list = [free_gb]
-        return gb_space
+        #gb_space: list = [free_gb]
+        #gb_space:
+        return free_gb # this actually returns value I want (tested on think pad with 744.57 GBs free)
 #        print(f"{free_gb} GBs free")
 
 

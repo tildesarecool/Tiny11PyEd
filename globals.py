@@ -161,13 +161,21 @@ ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 
 #defaultTinyPath: str = os.getenv('USERPROFILE') + """\\documents\\tiny11""".lstrip().rstrip().lower()
 shell = win32com.client.Dispatch("WScript.Shell")
-DOCUMENTS_PATH = shell.SpecialFolders("MyDocuments")# + """\\tiny11"""
+DOCUMENTS_PATH = shell.SpecialFolders("MyDocuments").rstrip().lstrip()  # + """\\tiny11"""
 
-DEFAULT_TINY_PATH: str = DOCUMENTS_PATH + """\\tiny11"""
+DEFAULT_TINY_PATH: str = DOCUMENTS_PATH + """\\tiny11""".rstrip().lstrip()
 
 DEFAULT_TINY_PATH_WIN11: str = DOCUMENTS_PATH + """\\win11"""
 
 DEFAULT_TINY_PATH_WIM_MOUNT: str = DOCUMENTS_PATH + """\\WimMount"""
+
+WIM_REL_PATH = """\\sources\\install.wim"""
+ESD_REL_PATH = """\\sources\\install.esd"""
+
+DEFAULT_TINY_PATH_WIN11_WIM = DEFAULT_TINY_PATH_WIN11 + WIM_REL_PATH
+DEFAULT_TINY_PATH_WIN11_ESD = DEFAULT_TINY_PATH_WIN11 + ESD_REL_PATH
+
+
 
 # CreateTiny11Tree = f"""Create folder tree for Tiny11:
 # Default: 
@@ -177,8 +185,8 @@ DEFAULT_TINY_PATH_WIM_MOUNT: str = DOCUMENTS_PATH + """\\WimMount"""
 # """
 
 
-WIM_REL_PATH = """\\sources\\install.wim"""
-ESD_REL_PATH = """\\sources\\install.esd"""
+
+
 
 # WimPath = WinInstallSourceRoot + WImfillPath
 # ESDPath = WinInstallSourceRoot + ESDfillPath

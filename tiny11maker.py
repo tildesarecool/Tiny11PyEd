@@ -72,21 +72,23 @@ import tomllib, shutil, os, subprocess, platform
 from globals import DEFAULT_TINY_PATH_WIN11, DEFAULT_TINY_PATH_WIM_MOUNT, PY_WIN_LOGO,  TOTAL_CPUS, SYSTEM_ARCH
 from globals import __RAW_BANNER__, DEFAULT_TINY_PATH  #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
 from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN
-from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET
-from function_defs import colored_print, calcDriveSpace, confirmDocumentsPaths
+from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET, DEFAULT_TINY_PATH_WIN11_WIM, DEFAULT_TINY_PATH_WIN11_ESD
+from function_defs import colored_print, calcDriveSpace, confirmDocumentsPaths, getDocsDrive
 
 
 def main():
-    confirmDocumentsPath()
+    print(f"value of get docs drive is {getDocsDrive()}")
+    print(f"sending value from get docs drive is {calcDriveSpace(getDocsDrive())}")
 #    print(f"value of documents path is \n{confirmDocumentsPath()}")
 
     #colored_print(CYAN, __RAW_BANNER__)
     #colored_print(GREEN, PY_WIN_LOGO)
 
-#    colored_print(BLUE, f"Welcome to Tiny11 Maker\n\n")
+    colored_print(BLUE, f"Welcome to Tiny11 Maker\n\n")
 
 #    print(f"doc path is {confirmDocumentsPath()}")
 
+# #################################################
     print("All below defaults can be customized in settings\n")
     print("Working directory is set to:")
     colored_print(YELLOW, f"{DEFAULT_TINY_PATH}\n")
@@ -94,7 +96,17 @@ def main():
     colored_print( YELLOW, f"{DEFAULT_TINY_PATH_WIN11}\n")
 
     print(f"The install.wim file will be mounted at location:")
-    colored_print( YELLOW, f"{DEFAULT_TINY_PATH_WIM_MOUNT}\n\n")
+    colored_print( YELLOW, f"{DEFAULT_TINY_PATH_WIM_MOUNT}\n")
+
+    print(f"Available drive space on {getDocsDrive()} is ")
+    colored_print(YELLOW, f"{calcDriveSpace(getDocsDrive())} GBs")
+
+    if int(calcDriveSpace(getDocsDrive())) >= 40:
+        colored_print(BRIGHT_GREEN, f"(That should be enough from space to work with) \n\n")
+    else:
+        colored_print(BRIGHT_RED, f"You may want to free up some space on {getDocsDrive()} or set working directory to a different drive\n\n")
+
+
 
 if __name__ == "__main__":
     main()
