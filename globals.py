@@ -163,17 +163,20 @@ ESDPathAlien = """P:\\ISOs\\Windows10-22h2\\sources\\install.esd"""
 shell = win32com.client.Dispatch("WScript.Shell")
 DOCUMENTS_PATH = shell.SpecialFolders("MyDocuments").rstrip().lstrip()  # + """\\tiny11"""
 
-DEFAULT_TINY_PATH: str = DOCUMENTS_PATH + """\\tiny11""".rstrip().lstrip()
+#DEFAULT_TINY_PATH: str = DOCUMENTS_PATH + """\\tiny11"""
 
-DEFAULT_TINY_PATH_WIN11: str = DOCUMENTS_PATH + """\\win11"""
+DEFAULT_TINY_PATH: str | bool = DOCUMENTS_PATH + """\\tiny11""" if os.path.exists(DOCUMENTS_PATH + "\\tiny11") else False
 
-DEFAULT_TINY_PATH_WIM_MOUNT: str = DOCUMENTS_PATH + """\\WimMount"""
+
+DEFAULT_TINY_PATH_WIN11 = DEFAULT_TINY_PATH + """\\win11""" if DEFAULT_TINY_PATH else None
+
+DEFAULT_TINY_PATH_WIM_MOUNT = DEFAULT_TINY_PATH + """\\WimMount""" if DEFAULT_TINY_PATH else None
 
 WIM_REL_PATH = """\\sources\\install.wim"""
 ESD_REL_PATH = """\\sources\\install.esd"""
 
-DEFAULT_TINY_PATH_WIN11_WIM = DEFAULT_TINY_PATH_WIN11 + WIM_REL_PATH
-DEFAULT_TINY_PATH_WIN11_ESD = DEFAULT_TINY_PATH_WIN11 + ESD_REL_PATH
+DEFAULT_TINY_PATH_WIN11_WIM = DEFAULT_TINY_PATH_WIN11 + WIM_REL_PATH if DEFAULT_TINY_PATH else None
+DEFAULT_TINY_PATH_WIN11_ESD = DEFAULT_TINY_PATH_WIN11 + ESD_REL_PATH if DEFAULT_TINY_PATH else None
 
 
 

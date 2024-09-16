@@ -67,18 +67,21 @@
 # 
 
 import tomllib, shutil, os, subprocess, platform
+
+okToRun = platform.platform(terse=True)[:7].lower() if platform.platform(terse=True)[:7].lower() == "windows" else False
+
 #import os, subprocess
 #from helper_fun import is_dism_available, checkUserInputYorN, converIndexList, CheckOnMkDir, checkIfPathExists, GetWIMinfoReturnFormatted, convertESDtoWIM, ValidateSanitizePath
-from globals import DEFAULT_TINY_PATH_WIN11, DEFAULT_TINY_PATH_WIM_MOUNT, PY_WIN_LOGO,  TOTAL_CPUS, SYSTEM_ARCH
+from globals import  PY_WIN_LOGO,  TOTAL_CPUS, SYSTEM_ARCH, DEFAULT_TINY_PATH_WIN11, DEFAULT_TINY_PATH_WIM_MOUNT
 from globals import __RAW_BANNER__, DEFAULT_TINY_PATH  #srcPath, TOTAL_CPUS, WImfillPath, ESDfillPath, tempDir, sample_input, menu_items, ESDPathAlien, defaultTinyPath, defaultTinyPathWin11, appxPackagesToRemove
 from globals import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN
 from globals import BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE, RESET, DEFAULT_TINY_PATH_WIN11_WIM, DEFAULT_TINY_PATH_WIN11_ESD
-from function_defs import colored_print, calcDriveSpace, confirmDocumentsPaths, getDocsDrive
+from function_defs import colored_print, calcDriveSpace, getDocsDrive
 
 
 def main():
-    print(f"value of get docs drive is {getDocsDrive()}")
-    print(f"sending value from get docs drive is {calcDriveSpace(getDocsDrive())}")
+#    print(f"value of get docs drive is {getDocsDrive()}")
+#    print(f"sending value from get docs drive is {calcDriveSpace(getDocsDrive())}")
 #    print(f"value of documents path is \n{confirmDocumentsPath()}")
 
     #colored_print(CYAN, __RAW_BANNER__)
@@ -89,27 +92,49 @@ def main():
 #    print(f"doc path is {confirmDocumentsPath()}")
 
 # #################################################
+
+    print(f"value of platform.platform(terse=True)[:7].lower() is {platform.platform(terse=True)[:7].lower()}")
+    print(f"value of oktorun is {okToRun}")
+
     print("All below defaults can be customized in settings\n")
-    print("Working directory is set to:")
-    colored_print(YELLOW, f"{DEFAULT_TINY_PATH}\n")
-    print(f"Windows 11 install source (such as ISO contents) will be copied to:")
-    colored_print( YELLOW, f"{DEFAULT_TINY_PATH_WIN11}\n")
+    
+    if type(DEFAULT_TINY_PATH) == str:
+        print(f"I see you already have the tiny11 directory, {DEFAULT_TINY_PATH}\n")
+        colored_print(YELLOW, f"{DEFAULT_TINY_PATH}\n")
+        
+        
+        print(f"Windows 11 install source (such as ISO contents) will be copied to:")
+        colored_print( YELLOW, f"{DEFAULT_TINY_PATH_WIN11}\n")
 
-    print(f"The install.wim file will be mounted at location:")
-    colored_print( YELLOW, f"{DEFAULT_TINY_PATH_WIM_MOUNT}\n")
+        print(f"The install.wim file will be mounted at location:")
+        colored_print( YELLOW, f"{DEFAULT_TINY_PATH_WIM_MOUNT}\n")
 
-    print(f"Available drive space on {getDocsDrive()} is ")
-    colored_print(YELLOW, f"{calcDriveSpace(getDocsDrive())} GBs")
+        print(f"Available drive space on {getDocsDrive()} is ")
+        #colored_print(YELLOW, f"{calcDriveSpace(getDocsDrive())} GBs")
 
-    if int(calcDriveSpace(getDocsDrive())) >= 40:
-        colored_print(BRIGHT_GREEN, f"(That should be enough from space to work with) \n\n")
+
+        if len(calcDriveSpace(getDocsDrive())) == 2:
+            colored_print(YELLOW, f"{calcDriveSpace(getDocsDrive())[0]} TBs, {calcDriveSpace(getDocsDrive())[1]} GBs")
+        else:
+            colored_print(YELLOW, f"{calcDriveSpace(getDocsDrive())[0]} GBs")
+            if calcDriveSpace(getDocsDrive())[0] >= 40:
+                colored_print(BRIGHT_GREEN, f"(That should be enough from space to work with) \n\n")
     else:
-        colored_print(BRIGHT_RED, f"You may want to free up some space on {getDocsDrive()} or set working directory to a different drive\n\n")
+        colored_print(RED, f"INSERT CREATE ONE OR MORE DIRECTORIES CODE HERE\n")
+        input()
+        breakpoint()
 
-
+#    else:
+#        colored_print(BRIGHT_RED, f"You may want to free up some space on {getDocsDrive()} or set working directory to a different drive\n\n")
 
 if __name__ == "__main__":
-    main()
+    # verify platform is windows
+    if okToRun:
+        main()
+    else:
+        # if not dump user out of script
+        colored_print(BRIGHT_RED, "Sorry, this script only works on Windows (try a VM)")
+        exit()
 
     # print(f"calcDriveSpace(confirmDocumentsPath()) is now {calcDriveSpace(confirmDocumentsPath())}")
     # print(f"calcDriveSpace(confirmDocumentsPath())[0] is now {calcDriveSpace(confirmDocumentsPath())[0]}")
