@@ -133,7 +133,7 @@ if __name__ == "__main__":
         main()
     else:
         # if not dump user out of script
-        colored_print(BRIGHT_RED, "Sorry, this script only works on Windows (try a VM)")
+        colored_print(BRIGHT_RED, "Sorry, this script only works on Windows (try a VM?)")
         exit()
 
     # print(f"calcDriveSpace(confirmDocumentsPath()) is now {calcDriveSpace(confirmDocumentsPath())}")
